@@ -11,6 +11,8 @@
 8. [Cost Comparison Between Providers and Models](#cost-comparison-between-providers-and-models)
 9. [Best Practices for Cost Management](#best-practices-for-cost-management)
 10. [Examples of Cost Reports](#examples-of-cost-reports)
+11. [Additional Resources](#additional-resources)
+12. [Support](#support)
 
 ---
 
