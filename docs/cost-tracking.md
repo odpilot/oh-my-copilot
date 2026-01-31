@@ -886,8 +886,8 @@ for (const agent of agents) {
 ## Support
 
 For questions or issues related to cost tracking:
-- Open an issue on [GitHub](https://github.com/yourusername/oh-my-copilot)
-- Check existing [discussions](https://github.com/yourusername/oh-my-copilot/discussions)
+- Open an issue on [GitHub](https://github.com/odpilot/oh-my-copilot)
+- Check existing [discussions](https://github.com/odpilot/oh-my-copilot/discussions)
 
 ---
 
