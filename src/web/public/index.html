@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oh My Copilot - Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header>
+      <div class="header-content">
+        <h1>🚀 Oh My Copilot</h1>
+        <nav>
+          <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+          <a href="#tasks" class="nav-link" data-section="tasks">Tasks</a>
+          <a href="#agents" class="nav-link" data-section="agents">Agents</a>
+          <a href="#analytics" class="nav-link" data-section="analytics">Analytics</a>
+        </nav>
+        <div class="connection-status">
+          <span id="ws-status" class="status-dot offline"></span>
+          <span id="ws-text">Disconnected</span>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main>
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="section active">
+        <h2>Dashboard</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <h3>Total Tasks</h3>
+            <span class="stat-value" id="total-tasks">0</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🤖</div>
+            <h3>Active Agents</h3>
+            <span class="stat-value" id="active-agents">0</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <h3>Total Cost</h3>
+            <span class="stat-value" id="total-cost">$0.00</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <h3>Success Rate</h3>
+            <span class="stat-value" id="success-rate">0%</span>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>Recent Tasks</h3>
+            <div id="recent-tasks" class="task-list-preview"></div>
+          </div>
+          <div class="card">
+            <h3>Agent Status</h3>
+            <div id="agent-status-preview" class="agent-list-preview"></div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Tasks Section -->
+      <section id="tasks" class="section">
+        <h2>Tasks</h2>
+        <div class="task-controls">
+          <button id="new-task-btn" class="btn btn-primary">+ New Task</button>
+          <select id="task-filter" class="filter-select">
+            <option value="all">All Tasks</option>
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="failed">Failed</option>
+          </select>
+          <button id="refresh-tasks-btn" class="btn btn-secondary">🔄 Refresh</button>
+        </div>
+        <div id="task-list" class="task-list"></div>
+      </section>
+      
+      <!-- Agents Section -->
+      <section id="agents" class="section">
+        <h2>Agents</h2>
+        <div id="agent-list" class="agent-grid"></div>
+      </section>
+      
+      <!-- Analytics Section -->
+      <section id="analytics" class="section">
+        <h2>Analytics</h2>
+        <div class="analytics-grid">
+          <div class="card">
+            <h3>Cost Overview</h3>
+            <div id="cost-breakdown" class="analytics-content"></div>
+          </div>
+          <div class="card">
+            <h3>Performance Metrics</h3>
+            <div id="metrics-content" class="analytics-content"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+      <p>Oh My Copilot v0.1 | <a href="https://github.com/odpilot/oh-my-copilot" target="_blank">GitHub</a></p>
+    </footer>
+  </div>
+
+  <!-- New Task Modal -->
+  <div id="new-task-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Create New Task</h2>
+      <form id="new-task-form">
+        <div class="form-group">
+          <label for="task-title">Title *</label>
+          <input type="text" id="task-title" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="task-description">Description</label>
+          <textarea id="task-description" name="description" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="task-priority">Priority</label>
+          <select id="task-priority" name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="task-agent">Assign Agent</label>
+          <select id="task-agent" name="agent">
+            <option value="executor">Executor</option>
+            <option value="architect">Architect</option>
+            <option value="qa-tester">QA Tester</option>
+            <option value="security">Security</option>
+            <option value="designer">Designer</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Create Task</button>
+          <button type="button" class="btn btn-secondary" id="cancel-task-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
