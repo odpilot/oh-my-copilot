@@ -26,6 +26,12 @@ export * from './analytics/dashboard.js';
 // Config
 export * from './config/types.js';
 export * from './config/default.js';
+export * from './config/models.js';
+export * from './config/keys.js';
+export * from './config/user-config.js';
+
+// Providers
+export * from './providers/index.js';
 
 // Utils
 export * from './utils/logger.js';
