@@ -40,7 +40,7 @@ describe('Logger', () => {
 
     it('should log debug messages', () => {
       logger.debug('debug message');
-      expect(consoleDebugSpy).toHaveBeenCalled();
+      expect(consoleLogSpy).toHaveBeenCalled();
     });
 
     it('should log info messages', () => {
@@ -50,12 +50,12 @@ describe('Logger', () => {
 
     it('should log warning messages', () => {
       logger.warn('warning message');
-      expect(consoleWarnSpy).toHaveBeenCalled();
+      expect(consoleLogSpy).toHaveBeenCalled();
     });
 
     it('should log error messages', () => {
       logger.error('error message');
-      expect(consoleErrorSpy).toHaveBeenCalled();
+      expect(consoleLogSpy).toHaveBeenCalled();
     });
   });
 
@@ -63,7 +63,7 @@ describe('Logger', () => {
     it('should not log debug when level is INFO', () => {
       logger = new Logger(LogLevel.INFO);
       logger.debug('debug');
-      expect(consoleDebugSpy).not.toHaveBeenCalled();
+      expect(consoleLogSpy).not.toHaveBeenCalled();
     });
 
     it('should not log info when level is WARN', () => {
@@ -75,13 +75,13 @@ describe('Logger', () => {
     it('should not log warn when level is ERROR', () => {
       logger = new Logger(LogLevel.ERROR);
       logger.warn('warn');
-      expect(consoleWarnSpy).not.toHaveBeenCalled();
+      expect(consoleLogSpy).not.toHaveBeenCalled();
     });
 
     it('should log error when level is ERROR', () => {
       logger = new Logger(LogLevel.ERROR);
       logger.error('error');
-      expect(consoleErrorSpy).toHaveBeenCalled();
+      expect(consoleLogSpy).toHaveBeenCalled();
     });
   });
 

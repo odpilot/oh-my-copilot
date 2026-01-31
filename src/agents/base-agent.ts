@@ -121,6 +121,67 @@ export class BaseAgent {
   }
 
   /**
+   * Execute a task with streaming output
+   */
+  async *executeStream(taskContext: TaskContext): AsyncGenerator<string, AgentResult, unknown> {
+    const startTime = Date.now();
+    
+    try {
+      logger.info(`[${this.name}] Starting streaming task execution`);
+      
+      // Build the prompt with context
+      const prompt = this.buildPrompt(taskContext);
+      
+      // Execute the task with streaming
+      let fullContent = '';
+      const stream = this.agent.chatStream(prompt);
+      
+      for await (const chunk of stream) {
+        fullContent += chunk;
+        yield chunk;
+      }
+      
+      const executionTime = Date.now() - startTime;
+      
+      logger.info(`[${this.name}] Streaming task completed in ${executionTime}ms`);
+      
+      return {
+        agentName: this.name,
+        success: true,
+        content: fullContent,
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0
+        },
+        model: this.config.model,
+        executionTime,
+        provider: this.agent.getProvider()
+      };
+    } catch (error) {
+      const executionTime = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      logger.error(`[${this.name}] Streaming task failed: ${errorMessage}`);
+      
+      return {
+        agentName: this.name,
+        success: false,
+        content: '',
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0
+        },
+        model: this.config.model,
+        executionTime,
+        error: errorMessage,
+        provider: this.agent.getProvider()
+      };
+    }
+  }
+
+  /**
    * Get the agent's name
    */
   getName(): string {

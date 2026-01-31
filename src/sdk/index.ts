@@ -186,6 +186,56 @@ export class UnifiedAgent {
   }
 
   /**
+   * Send a message to the agent with streaming
+   */
+  async *chatStream(message: string): AsyncGenerator<string, void, unknown> {
+    // Add user message to history
+    this.conversationHistory.push({
+      role: 'user',
+      content: message
+    });
+
+    // If using mock agent, just yield the full response at once
+    if (this.agent) {
+      const response = await this.agent.chat(message);
+      yield response.content;
+      return;
+    }
+
+    // Check if provider supports streaming
+    const providerClient = (this.client as any).providerClient;
+    if (!providerClient.createChatCompletionStream) {
+      // Fallback to non-streaming
+      const response = await this.chat(message);
+      yield response.content;
+      return;
+    }
+
+    // Stream the response
+    let fullContent = '';
+    const stream = providerClient.createChatCompletionStream({
+      model: this.config.model,
+      messages: this.conversationHistory,
+      temperature: this.config.temperature,
+      maxTokens: this.config.maxTokens
+    });
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content;
+      if (content) {
+        fullContent += content;
+        yield content;
+      }
+    }
+
+    // Add assistant response to history
+    this.conversationHistory.push({
+      role: 'assistant',
+      content: fullContent
+    });
+  }
+
+  /**
    * Get conversation history
    */
   getHistory(): Message[] {

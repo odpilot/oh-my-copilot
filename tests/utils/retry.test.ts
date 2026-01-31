@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { retry, retryIf } from '../../src/utils/retry.js';
+import { retry } from '../../src/utils/retry.js';
+import { APIError } from '../../src/errors/index.js';
 
 describe('Retry', () => {
   describe('retry', () => {
@@ -13,8 +14,8 @@ describe('Retry', () => {
 
     it('should retry on failure', async () => {
       const fn = vi.fn()
-        .mockRejectedValueOnce(new Error('fail 1'))
-        .mockRejectedValueOnce(new Error('fail 2'))
+        .mockRejectedValueOnce(new APIError('fail 1', 'test', 500))
+        .mockRejectedValueOnce(new APIError('fail 2', 'test', 500))
         .mockResolvedValue('success');
 
       const result = await retry(fn, { initialDelay: 10 });
@@ -24,7 +25,7 @@ describe('Retry', () => {
     });
 
     it('should throw after max attempts', async () => {
-      const fn = vi.fn().mockRejectedValue(new Error('always fails'));
+      const fn = vi.fn().mockRejectedValue(new APIError('always fails', 'test', 500));
 
       await expect(retry(fn, { maxAttempts: 3, initialDelay: 10 }))
         .rejects.toThrow('always fails');
@@ -36,8 +37,8 @@ describe('Retry', () => {
       let retryCount = 0;
       
       const fn = vi.fn()
-        .mockRejectedValueOnce(new Error('fail'))
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new APIError('fail', 'test', 500))
+        .mockRejectedValueOnce(new APIError('fail', 'test', 500))
         .mockResolvedValue('success');
 
       const onRetry = vi.fn(() => {
@@ -57,7 +58,7 @@ describe('Retry', () => {
 
     it('should respect maxDelay', async () => {
       const fn = vi.fn()
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new APIError('fail', 'test', 500))
         .mockResolvedValue('success');
 
       const onRetry = vi.fn();
@@ -72,50 +73,58 @@ describe('Retry', () => {
       expect(onRetry).toHaveBeenCalled();
     });
 
-    it('should call onRetry callback', async () => {
+    it('should call onRetry callback with delay', async () => {
       const fn = vi.fn()
-        .mockRejectedValueOnce(new Error('fail'))
+        .mockRejectedValueOnce(new APIError('fail', 'test', 500))
         .mockResolvedValue('success');
 
       const onRetry = vi.fn();
       
       await retry(fn, { initialDelay: 10, onRetry });
       
-      expect(onRetry).toHaveBeenCalledWith(1, expect.any(Error));
+      expect(onRetry).toHaveBeenCalledWith(1, expect.any(Error), expect.any(Number));
     });
-  });
 
-  describe('retryIf', () => {
-    it('should retry only if condition is met', async () => {
+    it('should retry only if custom condition is met', async () => {
       const fn = vi.fn()
         .mockRejectedValueOnce(new Error('retryable'))
         .mockResolvedValue('success');
 
       const shouldRetry = (error: Error) => error.message === 'retryable';
       
-      const result = await retryIf(fn, shouldRetry, { initialDelay: 10 });
+      const result = await retry(fn, { 
+        initialDelay: 10,
+        retryIf: shouldRetry
+      });
       
       expect(result).toBe('success');
       expect(fn).toHaveBeenCalledTimes(2);
     });
 
-    it('should not retry if condition is not met', async () => {
+    it('should not retry if custom condition is not met', async () => {
       const fn = vi.fn().mockRejectedValue(new Error('do not retry'));
 
       const shouldRetry = (error: Error) => error.message === 'retryable';
       
-      await expect(retryIf(fn, shouldRetry, { initialDelay: 10 }))
+      await expect(retry(fn, { 
+        initialDelay: 10,
+        retryIf: shouldRetry 
+      }))
         .rejects.toThrow('do not retry');
       
       expect(fn).toHaveBeenCalledTimes(1);
     });
 
     it('should stop retrying after max attempts even if condition is met', async () => {
-      const fn = vi.fn().mockRejectedValue(new Error('retryable'));
+      const fn = vi.fn().mockRejectedValue(new APIError('retryable', 'test', 500));
 
       const shouldRetry = () => true;
       
-      await expect(retryIf(fn, shouldRetry, { maxAttempts: 3, initialDelay: 10 }))
+      await expect(retry(fn, { 
+        maxAttempts: 3, 
+        initialDelay: 10,
+        retryIf: shouldRetry
+      }))
         .rejects.toThrow('retryable');
       
       expect(fn).toHaveBeenCalledTimes(3);
