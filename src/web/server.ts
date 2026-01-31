@@ -15,7 +15,13 @@ const getPublicPath = () => {
   try {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
-    return path.join(__dirname, 'public');
+    // When running from built code, resolve relative to the web module
+    const publicPath = path.join(__dirname, 'public');
+    // If this is being imported from CLI, adjust the path
+    if (__dirname.includes('/dist/cli')) {
+      return path.join(__dirname, '..', 'web', 'public');
+    }
+    return publicPath;
   } catch {
     // Fallback for environments where import.meta is not available
     return path.join(process.cwd(), 'dist', 'web', 'public');
@@ -53,6 +59,7 @@ export function createApp(): Express {
 
   // Static files - serve from public directory
   const publicPath = getPublicPath();
+  console.log('Serving static files from:', publicPath);
   app.use(express.static(publicPath));
 
   // Setup API routes
