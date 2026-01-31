@@ -40,3 +40,6 @@ export * from './utils/retry.js';
 
 // SDK
 export * from './sdk/index.js';
+
+// MCP
+export * from './mcp/index.js';

@@ -8,3 +8,6 @@ export * from './executor.js';
 export * from './qa-tester.js';
 export * from './security.js';
 export * from './designer.js';
+export * from './devops.js';
+export * from './data-analyst.js';
+export * from './reviewer.js';
