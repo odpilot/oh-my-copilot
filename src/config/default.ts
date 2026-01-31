@@ -4,7 +4,7 @@
 
 import type { OhMyCopilotConfig } from './types.js';
 
-export const DEFAULT_CONFIG: Required<OhMyCopilotConfig> = {
+export const DEFAULT_CONFIG: OhMyCopilotConfig = {
   dbPath: ':memory:',
   architectModel: 'gpt-4o',
   executorModel: 'gpt-4o-mini',
@@ -15,13 +15,15 @@ export const DEFAULT_CONFIG: Required<OhMyCopilotConfig> = {
   logLevel: 'info',
   logFile: '',
   apiKey: '',
-  githubToken: ''
+  githubToken: '',
+  defaultProvider: 'openai',
+  defaultModel: 'gpt-4o-mini'
 };
 
 /**
  * Merge user config with defaults
  */
-export function mergeConfig(userConfig: OhMyCopilotConfig = {}): Required<OhMyCopilotConfig> {
+export function mergeConfig(userConfig: OhMyCopilotConfig = {}): OhMyCopilotConfig {
   return {
     ...DEFAULT_CONFIG,
     ...userConfig

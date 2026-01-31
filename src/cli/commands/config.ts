@@ -131,7 +131,7 @@ async function selectModels() {
     }
   ]);
 
-  let agentModels = {};
+  let agentModels: Record<string, { model: string }> = {};
 
   if (configureAgents) {
     const agents = ['architect', 'executor', 'qa-tester', 'security', 'designer'];
