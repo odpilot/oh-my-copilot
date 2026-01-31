@@ -8,7 +8,8 @@
     "omc": "./dist/cli/index.js"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && npm run copy-public",
+    "copy-public": "mkdir -p dist/web/public && cp -r src/web/public/* dist/web/public/",
     "dev": "tsup --watch",
     "start": "node dist/cli/index.js",
     "web": "node dist/web/server.js",

@@ -57,6 +57,20 @@ program
   .option('--poll-interval <ms>', 'Task polling interval in ms', parseInt)
   .action(swarmCommand);
 
+// Web UI command
+program
+  .command('web')
+  .description('Start Web UI dashboard')
+  .option('-p, --port <number>', 'Port number', parseInt)
+  .action(async (options) => {
+    const { startServer } = await import('../web/server.js');
+    
+    const port = options.port || 3000;
+    
+    console.log('Starting Oh My Copilot Web UI...');
+    startServer({ port });
+  });
+
 // Eco command (alias to autopilot with cost optimization)
 program
   .command('eco <task>')
@@ -119,6 +133,9 @@ program.on('--help', () => {
   console.log('');
   console.log(chalk.gray('    # Economy mode'));
   console.log('    $ omc eco "Simple implementation task"');
+  console.log('');
+  console.log(chalk.gray('    # Start Web UI'));
+  console.log('    $ omc web --port 3000');
   console.log('');
 });
 
