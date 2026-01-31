@@ -3,8 +3,9 @@
  * Provides common functionality for all specialized agents
  */
 
-import { MockAgent, type AgentConfig, type AgentResponse } from '../sdk/index.js';
+import { UnifiedAgent, type AgentConfig, type AgentResponse } from '../sdk/index.js';
 import { logger } from '../utils/logger.js';
+import type { ProviderKeys } from '../config/types.js';
 
 export interface TaskContext {
   task: string;
@@ -24,17 +25,18 @@ export interface AgentResult {
   model: string;
   executionTime: number;
   error?: string;
+  provider?: string;
 }
 
 export class BaseAgent {
-  protected agent: MockAgent;
+  protected agent: UnifiedAgent;
   protected config: AgentConfig;
   protected name: string;
 
-  constructor(config: AgentConfig) {
+  constructor(config: AgentConfig, providerKeys?: ProviderKeys) {
     this.config = config;
     this.name = config.name;
-    this.agent = new MockAgent(config);
+    this.agent = new UnifiedAgent(config, { providerKeys });
   }
 
   /**
@@ -62,7 +64,8 @@ export class BaseAgent {
         content: response.content,
         usage: response.usage,
         model: response.model,
-        executionTime
+        executionTime,
+        provider: this.agent.getProvider()
       };
     } catch (error) {
       const executionTime = Date.now() - startTime;
@@ -81,7 +84,8 @@ export class BaseAgent {
         },
         model: this.config.model,
         executionTime,
-        error: errorMessage
+        error: errorMessage,
+        provider: this.agent.getProvider()
       };
     }
   }
@@ -126,5 +130,12 @@ export class BaseAgent {
    */
   getConfig(): AgentConfig {
     return { ...this.config };
+  }
+  
+  /**
+   * Get the current provider being used
+   */
+  getProvider(): string {
+    return this.agent.getProvider();
   }
 }
