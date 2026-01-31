@@ -402,11 +402,28 @@ Detailed documentation is available in the `docs/` directory:
 
 See the [`examples/`](./examples) directory for complete examples:
 
+### Basic Examples
 - [`basic-usage.ts`](./examples/basic-usage.ts) - Simple usage patterns
-- [`autopilot-example.ts`](./examples/autopilot-example.ts) - Full pipeline
+- [`autopilot-example.ts`](./examples/autopilot-example.ts) - Full pipeline workflow
 - [`ultrawork-example.ts`](./examples/ultrawork-example.ts) - Parallel execution
-- [`swarm-example.ts`](./examples/swarm-example.ts) - Swarm mode
-- [`custom-agent.ts`](./examples/custom-agent.ts) - Custom agents
+- [`swarm-example.ts`](./examples/swarm-example.ts) - Swarm mode with task pool
+- [`custom-agent.ts`](./examples/custom-agent.ts) - Creating custom agents
+
+### Advanced Examples
+- [`byok-providers.ts`](./examples/byok-providers.ts) - Using multiple AI providers (OpenAI, Anthropic, Google, Ollama)
+- [`cost-optimization.ts`](./examples/cost-optimization.ts) - Cost management strategies and ecomode
+- [`task-management.ts`](./examples/task-management.ts) - SQLite task pool operations
+- [`web-integration.ts`](./examples/web-integration.ts) - Web server and WebSocket integration
+- [`error-handling.ts`](./examples/error-handling.ts) - Error handling patterns and retry strategies
+- [`multi-model-workflow.ts`](./examples/multi-model-workflow.ts) - Multi-model workflow orchestration
+- [`streaming-output.ts`](./examples/streaming-output.ts) - Streaming and real-time output
+
+### Real-World Examples
+- [`real-world/build-rest-api.ts`](./examples/real-world/build-rest-api.ts) - Build complete REST API with autopilot
+- [`real-world/code-review.ts`](./examples/real-world/code-review.ts) - Automated code review
+- [`real-world/test-generation.ts`](./examples/real-world/test-generation.ts) - Generate tests for various frameworks
+- [`real-world/documentation.ts`](./examples/real-world/documentation.ts) - API docs, README, JSDoc generation
+- [`real-world/refactoring.ts`](./examples/real-world/refactoring.ts) - Code refactoring and optimization
 
 ---
 
@@ -425,11 +442,35 @@ npm run dev
 # Run tests
 npm test
 
+# Run tests in watch mode
+npm run test:watch
+
+# Generate test coverage report
+npm run test:coverage
+
+# Run tests with UI
+npm run test:ui
+
 # Type checking
 npm run typecheck
 
 # Start web UI
 npm run web
+```
+
+### Running Tests
+
+The project has a comprehensive test suite with 125+ tests covering:
+- Agent functionality (base-agent, architect, executor, qa-tester, security, designer)
+- Task pool operations (CRUD, filtering, priorities)
+- Keyword detection and mode matching
+- Utility functions (logger, retry, helpers)
+
+All tests use Vitest and can be run with:
+```bash
+npm test                 # Run all tests once
+npm run test:watch       # Run tests in watch mode
+npm run test:coverage    # Generate coverage report
 ```
 
 ---
