@@ -46,3 +46,6 @@ export * from './mcp/index.js';
 
 // Templates
 export * from './templates/index.js';
+
+// Plugins
+export * from './plugins/index.js';

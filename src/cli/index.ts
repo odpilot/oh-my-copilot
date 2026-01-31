@@ -10,6 +10,7 @@ import { ultraworkCommand } from './commands/ultrawork.js';
 import { swarmCommand } from './commands/swarm.js';
 import { configCommand } from './commands/config.js';
 import { templatesCommand } from './commands/templates.js';
+import { pluginsCommand } from './commands/plugins.js';
 
 const program = new Command();
 
@@ -144,6 +145,13 @@ program
   .option('--auditScope <path>', 'Template variable')
   .option('--auditDepth <depth>', 'Template variable')
   .action(templatesCommand);
+
+// Plugins command
+program
+  .command('plugins <action> [pluginName]')
+  .description('Manage plugins (actions: list, load, install, unload, info)')
+  .option('--config <json>', 'Plugin configuration (JSON string)')
+  .action(pluginsCommand);
 
 // Show banner on help
 program.on('--help', () => {
