@@ -58,7 +58,7 @@ export class Ecomode {
         context
       });
       results.push(implementResult);
-      totalCost += calculateCost(implementResult.usage);
+      totalCost += calculateCost({ ...implementResult.usage, model: implementResult.model });
 
       // Check cost threshold
       if (config.maxCostThreshold && totalCost > config.maxCostThreshold) {
@@ -74,7 +74,7 @@ export class Ecomode {
         previousResults: results
       });
       results.push(testResult);
-      totalCost += calculateCost(testResult.usage);
+      totalCost += calculateCost({ ...testResult.usage, model: testResult.model });
 
       // Check cost threshold again
       if (config.maxCostThreshold && totalCost > config.maxCostThreshold) {

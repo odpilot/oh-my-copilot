@@ -106,7 +106,10 @@ export class OhMyCopilot {
     
     // Track costs
     for (const agentResult of result.results) {
-      this.costTracker.track(agentResult.usage, agentResult.agentName);
+      this.costTracker.track(
+        { ...agentResult.usage, model: agentResult.model },
+        agentResult.agentName
+      );
     }
     
     // Track metrics
@@ -128,7 +131,10 @@ export class OhMyCopilot {
     
     // Track costs
     for (const agentResult of result.results) {
-      this.costTracker.track(agentResult.usage, agentResult.agentName);
+      this.costTracker.track(
+        { ...agentResult.usage, model: agentResult.model },
+        agentResult.agentName
+      );
     }
     
     // Track metrics
@@ -152,7 +158,10 @@ export class OhMyCopilot {
     
     // Track costs
     for (const agentResult of result.results) {
-      this.costTracker.track(agentResult.usage, agentResult.agentName);
+      this.costTracker.track(
+        { ...agentResult.usage, model: agentResult.model },
+        agentResult.agentName
+      );
     }
     
     // Track metrics

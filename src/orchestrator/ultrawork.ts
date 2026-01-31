@@ -56,7 +56,7 @@ export class Ultrawork {
       
       // Calculate total cost
       const totalCost = results.reduce(
-        (sum, result) => sum + calculateCost(result.usage),
+        (sum, result) => sum + calculateCost({ ...result.usage, model: result.model }),
         0
       );
 
@@ -120,7 +120,7 @@ export class Ultrawork {
       }
 
       const totalCost = results.reduce(
-        (sum, result) => sum + calculateCost(result.usage),
+        (sum, result) => sum + calculateCost({ ...result.usage, model: result.model }),
         0
       );
 

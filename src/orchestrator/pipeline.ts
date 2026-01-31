@@ -62,7 +62,7 @@ export class Pipeline {
         context
       });
       results.push(planResult);
-      totalCost += calculateCost(planResult.usage);
+      totalCost += calculateCost({ ...planResult.usage, model: planResult.model });
 
       if (!planResult.success && !config.continueOnFailure) {
         return this.buildResult(results, startTime, totalCost, false);
@@ -76,7 +76,7 @@ export class Pipeline {
         previousResults: results
       });
       results.push(implementResult);
-      totalCost += calculateCost(implementResult.usage);
+      totalCost += calculateCost({ ...implementResult.usage, model: implementResult.model });
 
       if (!implementResult.success && !config.continueOnFailure) {
         return this.buildResult(results, startTime, totalCost, false);
@@ -91,7 +91,7 @@ export class Pipeline {
           previousResults: results
         });
         results.push(testResult);
-        totalCost += calculateCost(testResult.usage);
+        totalCost += calculateCost({ ...testResult.usage, model: testResult.model });
 
         if (!testResult.success && !config.continueOnFailure) {
           return this.buildResult(results, startTime, totalCost, false);
@@ -107,7 +107,7 @@ export class Pipeline {
           previousResults: results
         });
         results.push(securityResult);
-        totalCost += calculateCost(securityResult.usage);
+        totalCost += calculateCost({ ...securityResult.usage, model: securityResult.model });
 
         if (!securityResult.success && !config.continueOnFailure) {
           return this.buildResult(results, startTime, totalCost, false);
