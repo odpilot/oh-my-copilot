@@ -132,6 +132,94 @@ const result = await designer.execute({
 
 ---
 
+### DevOps Agent
+
+**Model**: GPT-4o  
+**Role**: DevOps, CI/CD, and infrastructure
+
+**Responsibilities**:
+- Design and implement CI/CD pipelines
+- Configure Docker containers and Kubernetes
+- Set up cloud infrastructure (AWS, GCP, Azure)
+- Implement monitoring and logging solutions
+- Automate deployment processes
+- Manage infrastructure as code (Terraform, Pulumi)
+- Ensure system reliability and scalability
+- Handle security configurations and secrets management
+
+**Usage**:
+```typescript
+import { DevOpsAgent } from 'oh-my-copilot';
+
+const devops = new DevOpsAgent();
+const result = await devops.execute({
+  task: 'Create a CI/CD pipeline for a Node.js application with automated testing and deployment to AWS'
+});
+```
+
+---
+
+### Data Analyst Agent
+
+**Model**: GPT-4o  
+**Role**: Data analysis and insights
+
+**Responsibilities**:
+- Analyze datasets and extract insights
+- Create data visualizations and charts
+- Write SQL queries for data extraction
+- Perform statistical analysis
+- Build data pipelines and ETL processes
+- Create reports and dashboards
+- Identify trends and patterns
+- Recommend data-driven decisions
+
+**Usage**:
+```typescript
+import { DataAnalystAgent } from 'oh-my-copilot';
+
+const analyst = new DataAnalystAgent();
+const result = await analyst.execute({
+  task: 'Analyze user behavior data and create a visualization dashboard'
+});
+```
+
+---
+
+### Reviewer Agent
+
+**Model**: GPT-4o  
+**Role**: Code review and quality checks
+
+**Responsibilities**:
+- Review code for quality, readability, and maintainability
+- Identify bugs, anti-patterns, and potential issues
+- Suggest improvements and best practices
+- Check for performance optimizations
+- Verify error handling and edge cases
+- Ensure code follows project conventions
+- Review documentation and comments
+- Provide constructive, actionable feedback
+
+**Usage**:
+```typescript
+import { ReviewerAgent } from 'oh-my-copilot';
+
+const reviewer = new ReviewerAgent();
+const result = await reviewer.execute({
+  task: 'Review this pull request for code quality and best practices',
+  context: { code: '...' }
+});
+```
+
+**Review Format**:
+The Reviewer Agent provides feedback with severity levels:
+- 🔴 **Critical**: Must fix (security issues, bugs)
+- 🟡 **Warning**: Should fix (performance, maintainability)
+- 🟢 **Suggestion**: Nice to have (style, optimization)
+
+---
+
 ## Creating Custom Agents
 
 You can create specialized agents for your specific needs:
