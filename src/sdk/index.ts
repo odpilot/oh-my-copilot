@@ -153,6 +153,11 @@ export class UnifiedAgent {
       maxTokens: this.config.maxTokens
     });
 
+    // Validate response has choices
+    if (!response.choices || response.choices.length === 0) {
+      throw new Error('No response choices returned from provider');
+    }
+
     // Add assistant response to history
     const assistantMessage = response.choices[0].message;
     this.conversationHistory.push(assistantMessage);

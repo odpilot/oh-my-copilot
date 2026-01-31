@@ -36,6 +36,10 @@ export class AnthropicProvider implements ProviderClient {
       }))
     });
 
+    // Extract content safely
+    const firstContent = response.content[0];
+    const contentText = firstContent?.type === 'text' ? firstContent.text : '';
+
     return {
       id: response.id,
       model: response.model,
@@ -44,7 +48,7 @@ export class AnthropicProvider implements ProviderClient {
           index: 0,
           message: {
             role: 'assistant',
-            content: response.content[0]?.type === 'text' ? response.content[0].text : ''
+            content: contentText
           },
           finishReason: response.stop_reason || 'stop'
         }
