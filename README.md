@@ -1,28 +1,38 @@
 # oh-my-copilot
 
-🚀 A powerful multi-agent system with BYOK (Bring Your Own Key) support for multiple AI providers.
-
-> **New in v0.1**: Now supports OpenAI, Anthropic, Google Gemini, Azure OpenAI, Ollama, and GitHub Copilot SDK! Use your preferred AI provider with your own API keys. Mock SDK available for development and testing.
+🚀 A powerful multi-agent orchestration system with BYOK support.
 
 ## ✨ Features
 
-### MVP Features
-- 🎯 **Specialized Agents**: Architect, Executor, QA Tester, Security Reviewer, Designer
-- 🔍 **Keyword Detection**: Automatic mode detection from natural language
-- ⚙️ **Pipeline Mode**: Automated workflow (Planning → Execution → Testing → Security)
-- 🔑 **BYOK Support**: Bring Your Own Key for 6 AI providers (OpenAI, Anthropic, Google, Azure, Ollama, Copilot)
+### 🤖 Agent System
+- **5 Specialized Agents**: Architect, Executor, QA Tester, Security Reviewer, Designer
+- **Custom Agent Creation**: Build your own specialized agents
+- **Context Chaining**: Agents work together seamlessly
+- **Model Flexibility**: Choose different models for each agent
 
-### Advanced Features
-- 💾 **SQLite Task Pool**: Atomic task claiming and state management
-- 🐝 **Swarm Mode**: Dynamic agent task claiming with parallel execution
-- 💰 **Cost Tracking**: Real-time token usage and cost analysis with multi-provider support
-- 📊 **Analytics Dashboard**: Comprehensive metrics and performance tracking
+### ⚙️ Execution Modes
+- **Autopilot (Pipeline)**: Planning → Implementation → Testing → Security Review
+- **Ultrawork**: Parallel task execution for maximum speed
+- **Swarm**: Dynamic task claiming from SQLite pool with autonomous agents
+- **Ecomode**: Cost-optimized execution with efficient models
 
-### Full Features
-- 🖥️ **CLI Interface**: Rich interactive command-line tool with configuration wizard
-- 🌐 **Web UI**: Real-time monitoring dashboard (coming soon)
-- 📝 **Custom Templates**: Extensible agent template system
-- ⚡ **Multiple Modes**: Autopilot, Ultrawork, Swarm, and Ecomode
+### 🔑 BYOK (Bring Your Own Key)
+- **6 AI Providers**: OpenAI, Anthropic, Google Gemini, Azure OpenAI, Ollama, GitHub Copilot
+- **Dynamic Model Selection**: Mix and match models from different providers
+- **Model Aliases**: Use shortcuts like `fast`, `smart`, `cheap`
+- **Flexible Configuration**: Per-agent model customization
+
+### 📊 Analytics & Monitoring
+- **Real-time Cost Tracking**: Track token usage and costs across all providers
+- **Performance Metrics**: Monitor agent performance and success rates
+- **Web Dashboard**: Beautiful UI for real-time monitoring
+- **CLI Reports**: Detailed reports in the terminal
+
+### 🛠️ Developer Tools
+- **Interactive CLI**: Rich command-line interface with multiple modes
+- **Web UI Dashboard**: Modern web interface for monitoring and management
+- **SQLite Task Pool**: Atomic task management with state persistence
+- **Keyword Detection**: Automatic mode detection from natural language
 
 ---
 
@@ -44,6 +54,19 @@ npm run build
 ---
 
 ## 🚀 Quick Start
+
+### Configure Your API Keys
+
+First, set up your preferred AI provider:
+
+```bash
+# Interactive configuration wizard
+omc config
+
+# Or use environment variables
+echo "OPENAI_API_KEY=sk-..." >> .env
+echo "DEFAULT_PROVIDER=openai" >> .env
+```
 
 ### Programmatic Usage
 
@@ -67,13 +90,7 @@ omc.cleanup();
 ### CLI Usage
 
 ```bash
-# Install globally
-npm install -g oh-my-copilot
-
-# Configure API keys and models
-omc config
-
-# Autopilot mode
+# Autopilot mode (full pipeline)
 omc autopilot "Build a REST API with Express"
 
 # Interactive chat
@@ -87,6 +104,9 @@ omc eco "Simple task"
 
 # Swarm mode
 omc swarm --agents 5 --tasks-file tasks.json
+
+# Web UI
+omc web
 ```
 
 ---
@@ -95,9 +115,9 @@ omc swarm --agents 5 --tasks-file tasks.json
 
 ### 1. Autopilot Mode (Pipeline)
 
-Full automated pipeline with multiple specialized agents.
+Full automated pipeline with specialized agents working together.
 
-**Workflow**: Planning → Implementation → Testing → Security Review
+**Workflow**: Architect → Executor → QA Tester → Security Reviewer
 
 ```typescript
 const result = await omc.autopilot(
@@ -109,16 +129,8 @@ const result = await omc.autopilot(
 **CLI**:
 ```bash
 omc autopilot "Build a user authentication system"
-omc ap "Build a user authentication system" --skip-security
+omc ap "Build a REST API" --skip-security
 ```
-
-**Agents involved**:
-1. **Architect** (GPT-4o): Creates detailed implementation plan
-2. **Executor** (GPT-4o-mini): Implements the code
-3. **QA Tester** (GPT-4o-mini): Writes comprehensive tests
-4. **Security Reviewer** (GPT-4o): Reviews for vulnerabilities
-
----
 
 ### 2. Ultrawork Mode
 
@@ -140,11 +152,9 @@ omc ultrawork "Task 1" "Task 2" "Task 3"
 omc ulw --concurrency 2 --tasks-file tasks.json
 ```
 
----
-
 ### 3. Swarm Mode
 
-Agents dynamically claim and process tasks from a shared pool.
+Agents dynamically claim and process tasks from a shared SQLite pool.
 
 ```typescript
 const swarm = omc.getSwarm();
@@ -168,10 +178,8 @@ await swarm.start({ stopWhenEmpty: true });
 **CLI**:
 ```bash
 omc swarm --agents 5 "Task 1" "Task 2" "Task 3"
-omc swarm --agents 3 --tasks-file tasks.json --poll-interval 500
+omc swarm --agents 3 --tasks-file tasks.json
 ```
-
----
 
 ### 4. Ecomode (Economy)
 
@@ -196,35 +204,13 @@ omc eco "Simple task to implement"
 
 ### Built-in Agents
 
-#### Architect Agent (GPT-4o)
-- Analyzes problems and creates implementation plans
-- Designs system architecture
-- Breaks down complex tasks
-- Defines interfaces and contracts
-
-#### Executor Agent (GPT-4o-mini)
-- Implements code based on specifications
-- Writes clean, testable code
-- Handles edge cases
-- Creates and updates files
-
-#### QA Tester Agent (GPT-4o-mini)
-- Writes comprehensive tests
-- Validates implementations
-- Identifies edge cases
-- Ensures code coverage
-
-#### Security Agent (GPT-4o)
-- Reviews for vulnerabilities
-- Identifies attack vectors
-- Validates authentication/authorization
-- Checks for security anti-patterns
-
-#### Designer Agent (GPT-4o)
-- Designs UI/UX
-- Creates responsive layouts
-- Defines color schemes
-- Ensures accessibility
+| Agent | Model | Role | Responsibilities |
+|-------|-------|------|------------------|
+| **Architect** | GPT-4o | Planning | System design, architecture, task breakdown |
+| **Executor** | GPT-4o-mini | Implementation | Code writing, file operations, edge cases |
+| **QA Tester** | GPT-4o-mini | Testing | Test writing, validation, coverage |
+| **Security** | GPT-4o | Security | Vulnerability detection, security review |
+| **Designer** | GPT-4o | UI/UX | Interface design, accessibility |
 
 ### Custom Agents
 
@@ -277,7 +263,7 @@ omc.run('budget mode: add logging')
 
 ## 💰 Cost Tracking
 
-Track API usage and costs in real-time:
+Track API usage and costs in real-time across all providers:
 
 ```typescript
 const omc = new OhMyCopilot({ trackCosts: true });
@@ -310,49 +296,31 @@ Cost by Agent:
 
 ---
 
-## 📊 Analytics & Metrics
-
-```typescript
-// Get metrics
-const metrics = omc.getMetricsReport();
-
-// Get full dashboard
-const dashboard = omc.getDashboard();
-console.log(dashboard.getReport());
-
-// Export cost data
-const costTracker = omc.getCostReport();
-```
-
----
-
 ## ⚙️ Configuration
 
 ### BYOK (Bring Your Own Key)
 
-Oh My Copilot supports multiple AI providers, allowing you to use your preferred API keys:
-
-#### Supported Providers
+Oh My Copilot supports 6 AI providers:
 
 | Provider | Environment Variable | Models |
 |----------|---------------------|--------|
 | **OpenAI** | `OPENAI_API_KEY` | GPT-4o, GPT-4o-mini, o1, o1-mini |
-| **Anthropic** | `ANTHROPIC_API_KEY` | Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku |
-| **Google Gemini** | `GOOGLE_API_KEY` | Gemini 2.0 Flash, Gemini 1.5 Pro, Gemini 1.5 Flash |
-| **Azure OpenAI** | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT` | GPT-4o (Azure deployments) |
-| **Ollama** | `OLLAMA_BASE_URL` | Llama 3, Mistral, and other local models |
-| **GitHub Copilot** | `GITHUB_COPILOT_API_KEY` | Copilot SDK models |
+| **Anthropic** | `ANTHROPIC_API_KEY` | Claude 3.5 Sonnet, Claude 3 Opus/Haiku |
+| **Google** | `GOOGLE_API_KEY` | Gemini 2.0 Flash, Gemini 1.5 Pro/Flash |
+| **Azure** | `AZURE_OPENAI_API_KEY` | GPT-4o (Azure deployments) |
+| **Ollama** | `OLLAMA_BASE_URL` | Llama 3, Mistral, local models |
+| **Copilot** | `GITHUB_COPILOT_API_KEY` | Copilot SDK models |
 
 #### Quick Setup
 
-1. **Create a `.env` file** in your project root:
+Create a `.env` file:
 
 ```env
 # Choose your preferred provider
 OPENAI_API_KEY=sk-...
-# or
+
+# Or use multiple providers
 ANTHROPIC_API_KEY=sk-ant-...
-# or
 GOOGLE_API_KEY=AIza-...
 
 # Set defaults
@@ -360,21 +328,15 @@ DEFAULT_PROVIDER=openai
 DEFAULT_MODEL=gpt-4o-mini
 ```
 
-2. **Or use the interactive configuration:**
+Or use the interactive wizard:
 
 ```bash
 omc config
 ```
 
-This launches an interactive wizard to:
-- View available API keys
-- Select default provider and model
-- Configure agent-specific models
-- Manage your configuration
-
 #### Advanced Configuration
 
-Create an `omc.config.json` file for fine-grained control:
+Create an `omc.config.json` file:
 
 ```json
 {
@@ -390,100 +352,49 @@ Create an `omc.config.json` file for fine-grained control:
   "models": {
     "aliases": {
       "fast": "gpt-4o-mini",
-      "premium": "gpt-4o"
-    },
-    "disabled": ["o1-mini"]
+      "smart": "gpt-4o",
+      "cheap": "claude-3-haiku-20240307"
+    }
   }
 }
 ```
 
-#### Cost Optimization
+---
 
-Different models have different pricing tiers:
+## 🌐 Web UI
 
-- **Fast**: Optimized for speed and cost (e.g., GPT-4o-mini, Claude 3 Haiku, Gemini 2.0 Flash)
-- **Standard**: Balanced performance (e.g., o1-mini)
-- **Premium**: Maximum capability (e.g., GPT-4o, Claude 3.5 Sonnet, o1)
-
-Use the config command to view pricing information:
+Launch the web dashboard to monitor your agents and tasks:
 
 ```bash
-omc config
-# Select "View Current Config" to see all models and pricing
+omc web            # Default port 3000
+omc web --port 8080  # Custom port
 ```
 
-#### Development Mode
-
-For development without API keys, enable mock SDK mode:
-
-```env
-USE_MOCK_SDK=true
-```
-
-This uses a built-in mock implementation for testing and development.
-
-### Environment Variables
-
-Create a `.env` file:
-
-```env
-# API Configuration
-GITHUB_TOKEN=your_token
-COPILOT_API_KEY=your_key
-
-# Database
-DB_PATH=./data/tasks.db
-
-# Logging
-LOG_LEVEL=info
-LOG_FILE=./logs/omc.log
-
-# Cost Tracking
-TRACK_COSTS=true
-
-# Model Configuration
-DEFAULT_ARCHITECT_MODEL=gpt-4o
-DEFAULT_EXECUTOR_MODEL=gpt-4o-mini
-DEFAULT_QA_MODEL=gpt-4o-mini
-DEFAULT_SECURITY_MODEL=gpt-4o
-DEFAULT_DESIGNER_MODEL=gpt-4o
-```
-
-### Programmatic Configuration
-
-```typescript
-const omc = new OhMyCopilot({
-  dbPath: './my-tasks.db',
-  architectModel: 'gpt-4o',
-  executorModel: 'gpt-4o-mini',
-  trackCosts: true,
-  logLevel: 'debug'
-});
-```
+Features:
+- 📊 Real-time dashboard with metrics
+- 📋 Task management and monitoring
+- 🤖 Agent status and performance
+- 💰 Cost tracking and analytics
+- 🔄 Live WebSocket updates
 
 ---
 
-## 📚 API Reference
+## 📖 Documentation
 
-### OhMyCopilot Class
+Detailed documentation is available in the `docs/` directory:
 
-#### Constructor
-```typescript
-new OhMyCopilot(config?: OhMyCopilotConfig)
-```
-
-#### Methods
-
-- `run(input: string, context?: object): Promise<any>` - Auto-detect and execute
-- `autopilot(task: string, context?, config?): Promise<PipelineResult>` - Run pipeline
-- `ultra(tasks: UltraworkTask[], limit?): Promise<UltraworkResult>` - Parallel execution
-- `eco(task: string, context?, config?): Promise<EcomodeResult>` - Economy mode
-- `getSwarm(): Swarm` - Get swarm orchestrator
-- `getTaskPool(): TaskPool` - Get task pool
-- `getCostReport(): string` - Get cost tracking report
-- `getMetricsReport(): string` - Get metrics report
-- `getDashboard(): Dashboard` - Get analytics dashboard
-- `cleanup(): void` - Clean up resources
+| Document | Description |
+|----------|-------------|
+| [Getting Started](./docs/getting-started.md) | Quick start guide and installation |
+| [Agents](./docs/agents.md) | Complete agent system documentation |
+| [Execution Modes](./docs/modes.md) | Detailed guide to all 4 execution modes |
+| [BYOK Configuration](./docs/byok.md) | Multi-provider setup and configuration |
+| [CLI Reference](./docs/cli.md) | Complete CLI command reference |
+| [Web UI](./docs/web-ui.md) | Web dashboard usage guide |
+| [Cost Tracking](./docs/cost-tracking.md) | Cost analysis and optimization |
+| [Custom Agents](./docs/custom-agents.md) | Building custom specialized agents |
+| [Task Management](./docs/task-management.md) | SQLite task pool and state management |
+| [API Reference](./docs/api.md) | Programmatic API documentation |
 
 ---
 
@@ -491,34 +402,11 @@ new OhMyCopilot(config?: OhMyCopilotConfig)
 
 See the [`examples/`](./examples) directory for complete examples:
 
-- [`basic-usage.ts`](./examples/basic-usage.ts) - Simple usage
+- [`basic-usage.ts`](./examples/basic-usage.ts) - Simple usage patterns
 - [`autopilot-example.ts`](./examples/autopilot-example.ts) - Full pipeline
-- [`ultrawork-example.ts`](./examples/ultrawork-example.ts) - Parallel tasks
+- [`ultrawork-example.ts`](./examples/ultrawork-example.ts) - Parallel execution
 - [`swarm-example.ts`](./examples/swarm-example.ts) - Swarm mode
 - [`custom-agent.ts`](./examples/custom-agent.ts) - Custom agents
-
----
-
-## 🧩 Project Structure
-
-```
-oh-my-copilot/
-├── src/
-│   ├── agents/              # Agent implementations
-│   ├── orchestrator/        # Execution modes
-│   ├── tasks/               # Task management
-│   ├── keywords/            # Keyword detection
-│   ├── analytics/           # Cost tracking & metrics
-│   ├── cli/                 # CLI interface
-│   ├── config/              # Configuration
-│   ├── utils/               # Utilities
-│   ├── sdk/                 # Mock SDK
-│   ├── oh-my-copilot.ts     # Main class
-│   └── index.ts             # Exports
-├── examples/                # Usage examples
-├── docs/                    # Documentation
-└── tests/                   # Test suite
-```
 
 ---
 
@@ -539,16 +427,10 @@ npm test
 
 # Type checking
 npm run typecheck
+
+# Start web UI
+npm run web
 ```
-
----
-
-## 📖 Documentation
-
-- [Getting Started](./docs/getting-started.md)
-- [Agents Guide](./docs/agents.md)
-- [Execution Modes](./docs/modes.md)
-- [API Reference](./docs/api.md)
 
 ---
 
@@ -574,7 +456,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 - Inspired by [oh-my-claudecode](https://github.com/example/oh-my-claudecode)
 - Built for the GitHub Copilot ecosystem
-- Powered by OpenAI models
+- Powered by multiple AI providers
 
 ---
 
