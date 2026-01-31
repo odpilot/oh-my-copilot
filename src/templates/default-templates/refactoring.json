@@ -1,0 +1,58 @@
+{
+  "id": "refactoring",
+  "name": "Code Refactoring",
+  "description": "Refactor code to improve quality and maintainability",
+  "category": "development",
+  "variables": [
+    {
+      "name": "targetFile",
+      "description": "File or module to refactor",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "refactoringGoal",
+      "description": "Primary refactoring goal",
+      "type": "select",
+      "required": true,
+      "default": "improve-readability",
+      "options": [
+        "improve-readability",
+        "reduce-complexity",
+        "improve-performance",
+        "apply-design-patterns",
+        "extract-duplicates"
+      ]
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "analyze",
+      "name": "Analyze Code",
+      "agent": "architect",
+      "prompt": "Analyze {{targetFile}} and identify opportunities for refactoring to {{refactoringGoal}}. Create a refactoring plan."
+    },
+    {
+      "id": "refactor",
+      "name": "Implement Refactoring",
+      "agent": "executor",
+      "prompt": "Refactor {{targetFile}} according to the plan. Goal: {{refactoringGoal}}. Maintain existing functionality.",
+      "dependsOn": ["analyze"]
+    },
+    {
+      "id": "test",
+      "name": "Verify with Tests",
+      "agent": "qa-tester",
+      "prompt": "Create or update tests to verify the refactored code maintains the same functionality.",
+      "dependsOn": ["refactor"]
+    },
+    {
+      "id": "review",
+      "name": "Review Refactoring",
+      "agent": "reviewer",
+      "prompt": "Review the refactored code for quality improvements and potential issues.",
+      "dependsOn": ["refactor"]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id": "build-rest-api",
+  "name": "Build REST API",
+  "description": "Build a complete REST API with CRUD operations",
+  "category": "development",
+  "variables": [
+    {
+      "name": "resourceName",
+      "description": "The name of the resource (e.g., 'users', 'products')",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "framework",
+      "description": "Web framework to use",
+      "type": "select",
+      "required": true,
+      "default": "express",
+      "options": ["express", "fastify", "koa", "hono"]
+    },
+    {
+      "name": "database",
+      "description": "Database to use",
+      "type": "select",
+      "required": false,
+      "default": "memory",
+      "options": ["memory", "sqlite", "postgresql", "mongodb"]
+    },
+    {
+      "name": "includeTests",
+      "description": "Generate tests",
+      "type": "boolean",
+      "required": false,
+      "default": true
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "design",
+      "name": "API Design",
+      "agent": "architect",
+      "prompt": "Design a REST API for {{resourceName}} using {{framework}}. Include endpoints for CRUD operations, data models, and error handling strategy."
+    },
+    {
+      "id": "implement",
+      "name": "Implementation",
+      "agent": "executor",
+      "prompt": "Implement the {{resourceName}} API based on the design. Use {{framework}} and {{database}} for storage.",
+      "dependsOn": ["design"]
+    },
+    {
+      "id": "test",
+      "name": "Testing",
+      "agent": "qa-tester",
+      "prompt": "Write comprehensive tests for the {{resourceName}} API.",
+      "dependsOn": ["implement"],
+      "optional": "{{!includeTests}}"
+    },
+    {
+      "id": "security",
+      "name": "Security Review",
+      "agent": "security",
+      "prompt": "Review the {{resourceName}} API for security vulnerabilities.",
+      "dependsOn": ["implement"]
+    }
+  ]
+}

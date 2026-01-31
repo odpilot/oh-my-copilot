@@ -1,0 +1,73 @@
+{
+  "id": "feature-implementation",
+  "name": "Feature Implementation",
+  "description": "Complete feature implementation from design to testing",
+  "category": "development",
+  "variables": [
+    {
+      "name": "featureName",
+      "description": "Name of the feature",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "featureDescription",
+      "description": "Detailed description of the feature",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "complexity",
+      "description": "Feature complexity",
+      "type": "select",
+      "required": false,
+      "default": "medium",
+      "options": ["simple", "medium", "complex"]
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "design",
+      "name": "Feature Design",
+      "agent": "architect",
+      "prompt": "Design the feature: {{featureName}}. Description: {{featureDescription}}. Complexity: {{complexity}}. Create detailed implementation plan with file structure and interfaces."
+    },
+    {
+      "id": "ui-design",
+      "name": "UI/UX Design",
+      "agent": "designer",
+      "prompt": "Design the user interface for {{featureName}}. Description: {{featureDescription}}. Focus on usability and aesthetics.",
+      "dependsOn": ["design"],
+      "optional": false
+    },
+    {
+      "id": "implement",
+      "name": "Implementation",
+      "agent": "executor",
+      "prompt": "Implement {{featureName}} according to the design. Description: {{featureDescription}}",
+      "dependsOn": ["design", "ui-design"]
+    },
+    {
+      "id": "test",
+      "name": "Testing",
+      "agent": "qa-tester",
+      "prompt": "Create comprehensive tests for {{featureName}}. Ensure all functionality works as expected.",
+      "dependsOn": ["implement"]
+    },
+    {
+      "id": "security",
+      "name": "Security Review",
+      "agent": "security",
+      "prompt": "Review {{featureName}} for security vulnerabilities and privacy concerns.",
+      "dependsOn": ["implement"]
+    },
+    {
+      "id": "docs",
+      "name": "Documentation",
+      "agent": "designer",
+      "prompt": "Write user documentation for {{featureName}}.",
+      "dependsOn": ["implement"]
+    }
+  ]
+}
