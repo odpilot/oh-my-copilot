@@ -3,7 +3,7 @@
  * This is a placeholder until the official SDK is released
  */
 
-export interface ModelConfig {
+export interface AgentModelConfig {
   name: string;
   temperature?: number;
   maxTokens?: number;

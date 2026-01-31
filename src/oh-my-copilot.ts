@@ -20,7 +20,7 @@ import type { UltraworkResult, UltraworkTask } from './orchestrator/ultrawork.js
 import type { EcomodeResult } from './orchestrator/ecomode.js';
 
 export class OhMyCopilot {
-  private config: Required<OhMyCopilotConfig>;
+  private config: OhMyCopilotConfig;
   private pipeline: Pipeline;
   private swarm: Swarm;
   private ultrawork: Ultrawork;

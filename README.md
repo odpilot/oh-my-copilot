@@ -1,8 +1,8 @@
 # oh-my-copilot
 
-🚀 A powerful multi-agent system built with GitHub Copilot SDK, inspired by oh-my-claudecode.
+🚀 A powerful multi-agent system with BYOK (Bring Your Own Key) support for multiple AI providers.
 
-> **Note**: Currently uses a mock SDK implementation. Will seamlessly transition to the official GitHub Copilot SDK when available.
+> **New in v0.1**: Now supports OpenAI, Anthropic, Google Gemini, Azure OpenAI, Ollama, and GitHub Copilot SDK! Use your preferred AI provider with your own API keys. Mock SDK available for development and testing.
 
 ## ✨ Features
 
@@ -10,15 +10,16 @@
 - 🎯 **Specialized Agents**: Architect, Executor, QA Tester, Security Reviewer, Designer
 - 🔍 **Keyword Detection**: Automatic mode detection from natural language
 - ⚙️ **Pipeline Mode**: Automated workflow (Planning → Execution → Testing → Security)
+- 🔑 **BYOK Support**: Bring Your Own Key for 6 AI providers (OpenAI, Anthropic, Google, Azure, Ollama, Copilot)
 
 ### Advanced Features
 - 💾 **SQLite Task Pool**: Atomic task claiming and state management
 - 🐝 **Swarm Mode**: Dynamic agent task claiming with parallel execution
-- 💰 **Cost Tracking**: Real-time token usage and cost analysis
+- 💰 **Cost Tracking**: Real-time token usage and cost analysis with multi-provider support
 - 📊 **Analytics Dashboard**: Comprehensive metrics and performance tracking
 
 ### Full Features
-- 🖥️ **CLI Interface**: Rich interactive command-line tool
+- 🖥️ **CLI Interface**: Rich interactive command-line tool with configuration wizard
 - 🌐 **Web UI**: Real-time monitoring dashboard (coming soon)
 - 📝 **Custom Templates**: Extensible agent template system
 - ⚡ **Multiple Modes**: Autopilot, Ultrawork, Swarm, and Ecomode
@@ -68,6 +69,9 @@ omc.cleanup();
 ```bash
 # Install globally
 npm install -g oh-my-copilot
+
+# Configure API keys and models
+omc config
 
 # Autopilot mode
 omc autopilot "Build a REST API with Express"
@@ -323,6 +327,100 @@ const costTracker = omc.getCostReport();
 ---
 
 ## ⚙️ Configuration
+
+### BYOK (Bring Your Own Key)
+
+Oh My Copilot supports multiple AI providers, allowing you to use your preferred API keys:
+
+#### Supported Providers
+
+| Provider | Environment Variable | Models |
+|----------|---------------------|--------|
+| **OpenAI** | `OPENAI_API_KEY` | GPT-4o, GPT-4o-mini, o1, o1-mini |
+| **Anthropic** | `ANTHROPIC_API_KEY` | Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku |
+| **Google Gemini** | `GOOGLE_API_KEY` | Gemini 2.0 Flash, Gemini 1.5 Pro, Gemini 1.5 Flash |
+| **Azure OpenAI** | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT` | GPT-4o (Azure deployments) |
+| **Ollama** | `OLLAMA_BASE_URL` | Llama 3, Mistral, and other local models |
+| **GitHub Copilot** | `GITHUB_COPILOT_API_KEY` | Copilot SDK models |
+
+#### Quick Setup
+
+1. **Create a `.env` file** in your project root:
+
+```env
+# Choose your preferred provider
+OPENAI_API_KEY=sk-...
+# or
+ANTHROPIC_API_KEY=sk-ant-...
+# or
+GOOGLE_API_KEY=AIza-...
+
+# Set defaults
+DEFAULT_PROVIDER=openai
+DEFAULT_MODEL=gpt-4o-mini
+```
+
+2. **Or use the interactive configuration:**
+
+```bash
+omc config
+```
+
+This launches an interactive wizard to:
+- View available API keys
+- Select default provider and model
+- Configure agent-specific models
+- Manage your configuration
+
+#### Advanced Configuration
+
+Create an `omc.config.json` file for fine-grained control:
+
+```json
+{
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-4o-mini",
+  "agents": {
+    "architect": { "model": "gpt-4o" },
+    "executor": { "model": "gpt-4o-mini" },
+    "qa-tester": { "model": "claude-3-haiku-20240307" },
+    "security": { "model": "gpt-4o" },
+    "designer": { "model": "gpt-4o" }
+  },
+  "models": {
+    "aliases": {
+      "fast": "gpt-4o-mini",
+      "premium": "gpt-4o"
+    },
+    "disabled": ["o1-mini"]
+  }
+}
+```
+
+#### Cost Optimization
+
+Different models have different pricing tiers:
+
+- **Fast**: Optimized for speed and cost (e.g., GPT-4o-mini, Claude 3 Haiku, Gemini 2.0 Flash)
+- **Standard**: Balanced performance (e.g., o1-mini)
+- **Premium**: Maximum capability (e.g., GPT-4o, Claude 3.5 Sonnet, o1)
+
+Use the config command to view pricing information:
+
+```bash
+omc config
+# Select "View Current Config" to see all models and pricing
+```
+
+#### Development Mode
+
+For development without API keys, enable mock SDK mode:
+
+```env
+USE_MOCK_SDK=true
+```
+
+This uses a built-in mock implementation for testing and development.
 
 ### Environment Variables
 

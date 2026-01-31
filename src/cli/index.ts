@@ -8,6 +8,7 @@ import { autopilotCommand } from './commands/autopilot.js';
 import { chatCommand } from './commands/chat.js';
 import { ultraworkCommand } from './commands/ultrawork.js';
 import { swarmCommand } from './commands/swarm.js';
+import { configCommand } from './commands/config.js';
 
 const program = new Command();
 
@@ -15,6 +16,12 @@ program
   .name('omc')
   .description('Oh My Copilot - A multi-agent system built with GitHub Copilot SDK')
   .version('0.1.0');
+
+// Config command
+program
+  .command('config')
+  .description('Interactive configuration for API keys and models')
+  .action(configCommand);
 
 // Autopilot command
 program

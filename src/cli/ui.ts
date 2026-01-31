@@ -47,6 +47,15 @@ export class UI {
   }
 
   /**
+   * Show sub-section header
+   */
+  section(title: string): void {
+    console.log();
+    console.log(chalk.bold(title));
+    console.log(chalk.gray('─'.repeat(title.length)));
+  }
+
+  /**
    * Show formatted box
    */
   box(content: string, title?: string): void {
