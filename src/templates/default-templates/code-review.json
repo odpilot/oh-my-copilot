@@ -1,0 +1,38 @@
+{
+  "id": "code-review",
+  "name": "Code Review",
+  "description": "Comprehensive code review with quality and security checks",
+  "category": "review",
+  "variables": [
+    {
+      "name": "codeLocation",
+      "description": "Location of code to review (file path or directory)",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "focusArea",
+      "description": "Specific area to focus on",
+      "type": "select",
+      "required": false,
+      "default": "all",
+      "options": ["all", "security", "performance", "maintainability", "style"]
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "review",
+      "name": "Code Review",
+      "agent": "reviewer",
+      "prompt": "Review the code at {{codeLocation}}. Focus on: {{focusArea}}. Provide detailed feedback with severity levels."
+    },
+    {
+      "id": "security-check",
+      "name": "Security Analysis",
+      "agent": "security",
+      "prompt": "Perform security analysis on code at {{codeLocation}}. Identify vulnerabilities and suggest fixes.",
+      "dependsOn": ["review"]
+    }
+  ]
+}

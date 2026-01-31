@@ -6,6 +6,7 @@
 import { UnifiedAgent, type AgentConfig, type AgentResponse } from '../sdk/index.js';
 import { logger } from '../utils/logger.js';
 import type { ProviderKeys } from '../config/types.js';
+import { MCPClient, type MCPConfig } from '../mcp/index.js';
 
 export interface TaskContext {
   task: string;
@@ -32,6 +33,7 @@ export class BaseAgent {
   protected agent: UnifiedAgent;
   protected config: AgentConfig;
   protected name: string;
+  protected mcpClient?: MCPClient;
 
   constructor(config: AgentConfig, providerKeys?: ProviderKeys) {
     this.config = config;
@@ -137,5 +139,45 @@ export class BaseAgent {
    */
   getProvider(): string {
     return this.agent.getProvider();
+  }
+
+  /**
+   * Enable MCP (Model Context Protocol) support
+   */
+  async enableMCP(config: MCPConfig): Promise<void> {
+    this.mcpClient = new MCPClient();
+    await this.mcpClient.connect(config);
+    logger.info(`[${this.name}] MCP enabled with ${config.servers.length} servers`);
+  }
+
+  /**
+   * Use an MCP tool
+   */
+  async useTool(serverName: string, toolName: string, args: any): Promise<any> {
+    if (!this.mcpClient) {
+      throw new Error('MCP not enabled. Call enableMCP() first.');
+    }
+    return this.mcpClient.callTool(serverName, toolName, args);
+  }
+
+  /**
+   * List available MCP tools
+   */
+  async listMCPTools(serverName?: string): Promise<any[]> {
+    if (!this.mcpClient) {
+      throw new Error('MCP not enabled. Call enableMCP() first.');
+    }
+    return this.mcpClient.listTools(serverName);
+  }
+
+  /**
+   * Disable MCP and disconnect from servers
+   */
+  async disableMCP(): Promise<void> {
+    if (this.mcpClient) {
+      await this.mcpClient.disconnect();
+      this.mcpClient = undefined;
+      logger.info(`[${this.name}] MCP disabled`);
+    }
   }
 }

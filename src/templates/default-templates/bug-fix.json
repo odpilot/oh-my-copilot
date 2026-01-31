@@ -1,0 +1,58 @@
+{
+  "id": "bug-fix",
+  "name": "Bug Fix",
+  "description": "Systematic approach to fixing bugs",
+  "category": "development",
+  "variables": [
+    {
+      "name": "bugDescription",
+      "description": "Description of the bug",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "affectedArea",
+      "description": "Area of code affected by the bug",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "severity",
+      "description": "Bug severity",
+      "type": "select",
+      "required": false,
+      "default": "medium",
+      "options": ["critical", "high", "medium", "low"]
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "analyze",
+      "name": "Analyze Bug",
+      "agent": "architect",
+      "prompt": "Analyze the bug: {{bugDescription}}. Affected area: {{affectedArea}}. Severity: {{severity}}. Identify root cause and propose solution."
+    },
+    {
+      "id": "fix",
+      "name": "Implement Fix",
+      "agent": "executor",
+      "prompt": "Implement the bug fix for: {{bugDescription}}. Location: {{affectedArea}}. Ensure the fix is minimal and doesn't introduce new issues.",
+      "dependsOn": ["analyze"]
+    },
+    {
+      "id": "test",
+      "name": "Create Tests",
+      "agent": "qa-tester",
+      "prompt": "Create tests that verify the bug is fixed and prevent regression. Bug: {{bugDescription}}",
+      "dependsOn": ["fix"]
+    },
+    {
+      "id": "security-check",
+      "name": "Security Review",
+      "agent": "security",
+      "prompt": "Review the bug fix for security implications.",
+      "dependsOn": ["fix"]
+    }
+  ]
+}

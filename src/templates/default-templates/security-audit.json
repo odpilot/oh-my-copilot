@@ -1,0 +1,45 @@
+{
+  "id": "security-audit",
+  "name": "Security Audit",
+  "description": "Comprehensive security audit of codebase",
+  "category": "review",
+  "variables": [
+    {
+      "name": "auditScope",
+      "description": "Scope of security audit (file/directory path)",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "auditDepth",
+      "description": "Depth of security analysis",
+      "type": "select",
+      "required": false,
+      "default": "standard",
+      "options": ["quick", "standard", "thorough"]
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "scan",
+      "name": "Security Scan",
+      "agent": "security",
+      "prompt": "Perform a {{auditDepth}} security scan on {{auditScope}}. Identify all vulnerabilities, security risks, and compliance issues."
+    },
+    {
+      "id": "analyze",
+      "name": "Vulnerability Analysis",
+      "agent": "architect",
+      "prompt": "Analyze the security findings and prioritize vulnerabilities. Create a remediation plan.",
+      "dependsOn": ["scan"]
+    },
+    {
+      "id": "review",
+      "name": "Code Review",
+      "agent": "reviewer",
+      "prompt": "Review code at {{auditScope}} for security best practices and potential issues.",
+      "dependsOn": ["scan"]
+    }
+  ]
+}

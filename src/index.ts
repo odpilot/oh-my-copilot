@@ -40,3 +40,12 @@ export * from './utils/retry.js';
 
 // SDK
 export * from './sdk/index.js';
+
+// MCP
+export * from './mcp/index.js';
+
+// Templates
+export * from './templates/index.js';
+
+// Plugins
+export * from './plugins/index.js';

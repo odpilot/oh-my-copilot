@@ -5,16 +5,25 @@
 ## ✨ Features
 
 ### 🤖 Agent System
-- **5 Specialized Agents**: Architect, Executor, QA Tester, Security Reviewer, Designer
+- **8 Specialized Agents**: Architect, Executor, QA Tester, Security Reviewer, Designer, DevOps, Data Analyst, Reviewer
 - **Custom Agent Creation**: Build your own specialized agents
 - **Context Chaining**: Agents work together seamlessly
 - **Model Flexibility**: Choose different models for each agent
+- **MCP Support**: Agents can use Model Context Protocol tools
 
 ### ⚙️ Execution Modes
 - **Autopilot (Pipeline)**: Planning → Implementation → Testing → Security Review
 - **Ultrawork**: Parallel task execution for maximum speed
 - **Swarm**: Dynamic task claiming from SQLite pool with autonomous agents
 - **Ecomode**: Cost-optimized execution with efficient models
+- **Templates**: Pre-configured workflows for common tasks
+
+### 🔌 Extensibility
+- **Plugin System**: Extend functionality with custom plugins
+- **Built-in Plugins**: GitHub, Jira, and Slack integrations
+- **MCP Integration**: Model Context Protocol for tool usage
+- **Task Templates**: 8 ready-to-use templates for common workflows
+- **NPM Plugin Support**: Install plugins from npm
 
 ### 🔑 BYOK (Bring Your Own Key)
 - **6 AI Providers**: OpenAI, Anthropic, Google Gemini, Azure OpenAI, Ollama, GitHub Copilot
@@ -33,6 +42,7 @@
 - **Web UI Dashboard**: Modern web interface for monitoring and management
 - **SQLite Task Pool**: Atomic task management with state persistence
 - **Keyword Detection**: Automatic mode detection from natural language
+- **Template System**: Execute common workflows with pre-built templates
 
 ---
 
@@ -104,6 +114,14 @@ omc eco "Simple task"
 
 # Swarm mode
 omc swarm --agents 5 --tasks-file tasks.json
+
+# Templates
+omc templates list
+omc templates run build-rest-api --resourceName users --framework express
+
+# Plugins
+omc plugins list
+omc plugins load ./my-plugin.js
 
 # Web UI
 omc web
@@ -386,7 +404,7 @@ Detailed documentation is available in the `docs/` directory:
 | Document | Description |
 |----------|-------------|
 | [Getting Started](./docs/getting-started.md) | Quick start guide and installation |
-| [Agents](./docs/agents.md) | Complete agent system documentation |
+| [Agents](./docs/agents.md) | Complete agent system documentation (8 agents) |
 | [Execution Modes](./docs/modes.md) | Detailed guide to all 4 execution modes |
 | [BYOK Configuration](./docs/byok.md) | Multi-provider setup and configuration |
 | [CLI Reference](./docs/cli.md) | Complete CLI command reference |
@@ -394,6 +412,9 @@ Detailed documentation is available in the `docs/` directory:
 | [Cost Tracking](./docs/cost-tracking.md) | Cost analysis and optimization |
 | [Custom Agents](./docs/custom-agents.md) | Building custom specialized agents |
 | [Task Management](./docs/task-management.md) | SQLite task pool and state management |
+| [MCP Integration](./docs/mcp.md) | **NEW:** Model Context Protocol integration |
+| [Task Templates](./docs/templates.md) | **NEW:** Task template system (8 templates) |
+| [Plugin System](./docs/plugins.md) | **NEW:** Plugin development and usage |
 | [API Reference](./docs/api.md) | Programmatic API documentation |
 
 ---

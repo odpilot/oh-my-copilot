@@ -1,0 +1,52 @@
+{
+  "id": "test-generation",
+  "name": "Test Generation",
+  "description": "Generate comprehensive test suites for existing code",
+  "category": "testing",
+  "variables": [
+    {
+      "name": "sourceFile",
+      "description": "Source file to generate tests for",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "testFramework",
+      "description": "Testing framework to use",
+      "type": "select",
+      "required": true,
+      "default": "vitest",
+      "options": ["vitest", "jest", "mocha", "ava"]
+    },
+    {
+      "name": "coverageTarget",
+      "description": "Target code coverage percentage",
+      "type": "number",
+      "required": false,
+      "default": 80
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "analyze",
+      "name": "Code Analysis",
+      "agent": "architect",
+      "prompt": "Analyze {{sourceFile}} and identify all functions, methods, and edge cases that need testing."
+    },
+    {
+      "id": "generate-tests",
+      "name": "Generate Tests",
+      "agent": "qa-tester",
+      "prompt": "Generate comprehensive tests for {{sourceFile}} using {{testFramework}}. Target {{coverageTarget}}% coverage. Include unit tests, integration tests, and edge cases.",
+      "dependsOn": ["analyze"]
+    },
+    {
+      "id": "review-tests",
+      "name": "Review Tests",
+      "agent": "reviewer",
+      "prompt": "Review the generated tests for quality and completeness.",
+      "dependsOn": ["generate-tests"]
+    }
+  ]
+}

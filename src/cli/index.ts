@@ -9,6 +9,8 @@ import { chatCommand } from './commands/chat.js';
 import { ultraworkCommand } from './commands/ultrawork.js';
 import { swarmCommand } from './commands/swarm.js';
 import { configCommand } from './commands/config.js';
+import { templatesCommand } from './commands/templates.js';
+import { pluginsCommand } from './commands/plugins.js';
 
 const program = new Command();
 
@@ -113,6 +115,43 @@ program
       omc.cleanup();
     }
   });
+
+// Templates command
+program
+  .command('templates <action> [templateId]')
+  .description('Manage and execute task templates (actions: list, show, run)')
+  .option('-c, --category <category>', 'Filter by category (for list)')
+  .option('-i, --interactive', 'Interactive mode (for run)')
+  .option('--resourceName <name>', 'Template variable')
+  .option('--framework <name>', 'Template variable')
+  .option('--database <name>', 'Template variable')
+  .option('--includeTests <boolean>', 'Template variable')
+  .option('--codeLocation <path>', 'Template variable')
+  .option('--focusArea <area>', 'Template variable')
+  .option('--sourceFile <path>', 'Template variable')
+  .option('--testFramework <name>', 'Template variable')
+  .option('--coverageTarget <number>', 'Template variable', parseInt)
+  .option('--projectPath <path>', 'Template variable')
+  .option('--docType <type>', 'Template variable')
+  .option('--format <format>', 'Template variable')
+  .option('--targetFile <path>', 'Template variable')
+  .option('--refactoringGoal <goal>', 'Template variable')
+  .option('--bugDescription <desc>', 'Template variable')
+  .option('--affectedArea <area>', 'Template variable')
+  .option('--severity <level>', 'Template variable')
+  .option('--featureName <name>', 'Template variable')
+  .option('--featureDescription <desc>', 'Template variable')
+  .option('--complexity <level>', 'Template variable')
+  .option('--auditScope <path>', 'Template variable')
+  .option('--auditDepth <depth>', 'Template variable')
+  .action(templatesCommand);
+
+// Plugins command
+program
+  .command('plugins <action> [pluginName]')
+  .description('Manage plugins (actions: list, load, install, unload, info)')
+  .option('--config <json>', 'Plugin configuration (JSON string)')
+  .action(pluginsCommand);
 
 // Show banner on help
 program.on('--help', () => {

@@ -1,0 +1,53 @@
+{
+  "id": "documentation",
+  "name": "Documentation Generation",
+  "description": "Generate comprehensive documentation for code",
+  "category": "documentation",
+  "variables": [
+    {
+      "name": "projectPath",
+      "description": "Path to project or code to document",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "docType",
+      "description": "Type of documentation",
+      "type": "select",
+      "required": true,
+      "default": "api",
+      "options": ["api", "user-guide", "architecture", "tutorial"]
+    },
+    {
+      "name": "format",
+      "description": "Documentation format",
+      "type": "select",
+      "required": false,
+      "default": "markdown",
+      "options": ["markdown", "html", "asciidoc"]
+    }
+  ],
+  "agents": [],
+  "steps": [
+    {
+      "id": "analyze",
+      "name": "Analyze Code",
+      "agent": "architect",
+      "prompt": "Analyze the code at {{projectPath}} and create a documentation outline for {{docType}} documentation."
+    },
+    {
+      "id": "write-docs",
+      "name": "Write Documentation",
+      "agent": "designer",
+      "prompt": "Write comprehensive {{docType}} documentation in {{format}} format for the code at {{projectPath}}. Make it clear, well-structured, and user-friendly.",
+      "dependsOn": ["analyze"]
+    },
+    {
+      "id": "review",
+      "name": "Review Documentation",
+      "agent": "reviewer",
+      "prompt": "Review the documentation for clarity, accuracy, and completeness.",
+      "dependsOn": ["write-docs"]
+    }
+  ]
+}
