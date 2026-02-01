@@ -2,6 +2,7 @@
   "name": "oh-my-copilot",
   "version": "0.1.0",
   "description": "A multi-agent system built with GitHub Copilot SDK, inspired by oh-my-claudecode",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
