@@ -52,6 +52,9 @@
 - **Performance Metrics**: Monitor agent performance and success rates
 - **Web Dashboard**: Beautiful UI for real-time monitoring
 - **CLI Reports**: Detailed reports in the terminal
+- **HUD Statusline**: Real-time progress display during execution ✨ NEW!
+- **State Management**: Session history and wisdom capture ✨ NEW!
+- **Agent Statistics**: Success rate and cost tracking per agent ✨ NEW!
 
 ### 🛠️ Developer Tools
 - **Interactive CLI**: Rich command-line interface with multiple modes
@@ -60,6 +63,11 @@
 - **SQLite Task Pool**: Atomic task management with state persistence
 - **Keyword Detection**: Automatic mode detection from natural language
 - **Template System**: Execute common workflows with pre-built templates
+- **State Management**: View session history, wisdom, and agent stats ✨ NEW!
+  - `omc state sessions` - View recent sessions
+  - `omc state wisdom` - View captured learnings
+  - `omc state stats` - View agent statistics
+  - `omc state clean` - Clean old session data
 
 ---
 
