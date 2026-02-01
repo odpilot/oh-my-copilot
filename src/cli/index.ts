@@ -13,6 +13,7 @@ import { templatesCommand } from './commands/templates.js';
 import { pluginsCommand } from './commands/plugins.js';
 import { ralphCommand } from './commands/ralph.js';
 import { ultrapilotCommand } from './commands/ultrapilot.js';
+import { stateCommand } from './commands/state.js';
 
 const program = new Command();
 
@@ -59,6 +60,16 @@ program
   .option('--strict', 'Enable strict mode (all checks must pass)')
   .option('-o, --output <file>', 'Save results to file')
   .action(ralphCommand);
+
+// State command (NEW)
+program
+  .command('state <action>')
+  .description('View and manage session state and wisdom (actions: sessions, wisdom, stats, clean)')
+  .option('-l, --limit <number>', 'Limit number of results', parseInt)
+  .option('--category <category>', 'Filter wisdom by category (success, failure, optimization, insight)')
+  .option('--tags <tags>', 'Filter wisdom by tags (comma-separated)')
+  .option('--days <days>', 'Days to keep for clean action', parseInt)
+  .action(stateCommand);
 
 // Chat command
 program
@@ -191,6 +202,15 @@ program.on('--help', () => {
   console.log('');
   console.log(chalk.gray('    # Ralph mode (guarantee completion)'));
   console.log('    $ omc ralph "Implement auth" --strict --max-retries 3');
+  console.log('');
+  console.log(chalk.gray('    # View session history'));
+  console.log('    $ omc state sessions');
+  console.log('');
+  console.log(chalk.gray('    # View captured wisdom'));
+  console.log('    $ omc state wisdom --category success');
+  console.log('');
+  console.log(chalk.gray('    # View agent statistics'));
+  console.log('    $ omc state stats');
   console.log('');
   console.log(chalk.gray('    # Interactive chat'));
   console.log('    $ omc chat');
