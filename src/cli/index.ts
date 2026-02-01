@@ -11,6 +11,8 @@ import { swarmCommand } from './commands/swarm.js';
 import { configCommand } from './commands/config.js';
 import { templatesCommand } from './commands/templates.js';
 import { pluginsCommand } from './commands/plugins.js';
+import { ralphCommand } from './commands/ralph.js';
+import { ultrapilotCommand } from './commands/ultrapilot.js';
 
 const program = new Command();
 
@@ -34,6 +36,29 @@ program
   .option('--skip-tests', 'Skip testing phase')
   .option('-o, --output <file>', 'Save results to file')
   .action(autopilotCommand);
+
+// Ultrapilot command (NEW)
+program
+  .command('ultrapilot <task>')
+  .alias('up')
+  .description('Advanced orchestration with skill composition and smart routing')
+  .option('--skills <skills>', 'Comma-separated list of skills (default,ultrawork,ralph,etc.)')
+  .option('--parallel', 'Enable parallel execution')
+  .option('--no-smart-routing', 'Disable smart model routing')
+  .option('--no-auto-delegate', 'Disable automatic delegation')
+  .option('-c, --concurrency <number>', 'Maximum concurrent tasks', parseInt)
+  .option('-o, --output <file>', 'Save results to file')
+  .action(ultrapilotCommand);
+
+// Ralph command (NEW)
+program
+  .command('ralph <task>')
+  .description('Guarantee completion with verification and evidence-based checks')
+  .option('--max-retries <number>', 'Maximum retry attempts', parseInt)
+  .option('--checks <checks>', 'Comma-separated verification checks (BUILD,TEST,LINT,etc.)')
+  .option('--strict', 'Enable strict mode (all checks must pass)')
+  .option('-o, --output <file>', 'Save results to file')
+  .action(ralphCommand);
 
 // Chat command
 program
@@ -160,6 +185,12 @@ program.on('--help', () => {
   console.log('');
   console.log(chalk.gray('    # Run autopilot mode'));
   console.log('    $ omc autopilot "Build a REST API with Express"');
+  console.log('');
+  console.log(chalk.gray('    # Ultrapilot mode (advanced orchestration)'));
+  console.log('    $ omc ultrapilot "Build microservices" --smart-routing --auto-delegate');
+  console.log('');
+  console.log(chalk.gray('    # Ralph mode (guarantee completion)'));
+  console.log('    $ omc ralph "Implement auth" --strict --max-retries 3');
   console.log('');
   console.log(chalk.gray('    # Interactive chat'));
   console.log('    $ omc chat');
