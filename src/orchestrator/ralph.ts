@@ -11,6 +11,8 @@ import { SecurityAgent } from '../agents/security.js';
 import type { AgentResult } from '../agents/base-agent.js';
 import { logger } from '../utils/logger.js';
 import { calculateCost, formatCost, formatDuration } from '../utils/helpers.js';
+import { hud } from '../cli/hud.js';
+import { stateManager, type SessionState } from '../utils/state-manager.js';
 
 export interface VerificationCheck {
   name: string;
@@ -68,6 +70,30 @@ export class Ralph {
     let totalCost = 0;
     let retryCount = 0;
     const maxRetries = config.maxRetries || 3;
+    
+    // Create session state
+    const sessionId = `ralph-${Date.now()}`;
+    const sessionState: SessionState = {
+      id: sessionId,
+      mode: 'ralph',
+      startTime,
+      status: 'active',
+      totalCost: 0,
+      agentsUsed: [],
+      tasks: [
+        { title: 'Planning', status: 'pending' },
+        { title: 'Implementation', status: 'pending' },
+        { title: 'Testing', status: 'pending' },
+        { title: 'Security Review', status: 'pending' },
+        { title: 'Verification', status: 'pending' }
+      ]
+    };
+    
+    // Start HUD if in CLI context
+    const useHUD = context?.useHUD !== false;
+    if (useHUD) {
+      hud.start('Ralph');
+    }
 
     try {
       logger.info('🎯 Starting Ralph Mode (Guarantee Completion)');
@@ -78,18 +104,76 @@ export class Ralph {
       while (!completed && retryCount <= maxRetries) {
         if (retryCount > 0) {
           logger.info(`Retry attempt ${retryCount}/${maxRetries}...`);
+          if (useHUD) {
+            hud.update({
+              mode: 'ralph',
+              activeAgents: [],
+              completedSteps: 0,
+              totalSteps: 5,
+              currentCost: totalCost,
+              elapsedTime: Date.now() - startTime,
+              status: 'warning',
+              message: `Retry ${retryCount}/${maxRetries}`
+            });
+          }
         }
 
         // Step 1: Planning
+        if (useHUD) {
+          hud.step(1, 5, 'Planning with Architect');
+          hud.update({
+            mode: 'ralph',
+            currentAgent: 'architect',
+            activeAgents: ['architect'],
+            completedSteps: 0,
+            totalSteps: 5,
+            currentCost: totalCost,
+            elapsedTime: Date.now() - startTime,
+            status: 'running'
+          });
+        }
+        
+        sessionState.tasks[0].status = 'running';
+        sessionState.tasks[0].agentName = 'architect';
+        stateManager.saveSessionState(sessionState);
+        
         logger.info('Step 1/5: Planning with Architect...');
         const planResult = await this.architect.execute({
           task: retryCount === 0 ? task : `Retry: ${task}. Previous attempts failed verification. Please address the issues.`,
           context: { ...context, retryCount, previousResults: results }
         });
         results.push(planResult);
-        totalCost += calculateCost({ ...planResult.usage, model: planResult.model });
+        const planCost = calculateCost({ ...planResult.usage, model: planResult.model });
+        totalCost += planCost;
+        
+        sessionState.tasks[0].status = planResult.success ? 'completed' : 'failed';
+        sessionState.tasks[0].cost = planCost;
+        sessionState.totalCost = totalCost;
+        if (!sessionState.agentsUsed.includes('architect')) {
+          sessionState.agentsUsed.push('architect');
+        }
+        stateManager.saveSessionState(sessionState);
+        stateManager.updateAgentStats('architect', planResult.success, planCost);
 
         // Step 2: Implementation
+        if (useHUD) {
+          hud.step(2, 5, 'Implementation with Executor');
+          hud.update({
+            mode: 'ralph',
+            currentAgent: 'executor',
+            activeAgents: ['executor'],
+            completedSteps: 1,
+            totalSteps: 5,
+            currentCost: totalCost,
+            elapsedTime: Date.now() - startTime,
+            status: 'running'
+          });
+        }
+        
+        sessionState.tasks[1].status = 'running';
+        sessionState.tasks[1].agentName = 'executor';
+        stateManager.saveSessionState(sessionState);
+        
         logger.info('Step 2/5: Implementation...');
         const implementResult = await this.executor.execute({
           task,
@@ -97,9 +181,37 @@ export class Ralph {
           previousResults: results
         });
         results.push(implementResult);
-        totalCost += calculateCost({ ...implementResult.usage, model: implementResult.model });
+        const implCost = calculateCost({ ...implementResult.usage, model: implementResult.model });
+        totalCost += implCost;
+        
+        sessionState.tasks[1].status = implementResult.success ? 'completed' : 'failed';
+        sessionState.tasks[1].cost = implCost;
+        sessionState.totalCost = totalCost;
+        if (!sessionState.agentsUsed.includes('executor')) {
+          sessionState.agentsUsed.push('executor');
+        }
+        stateManager.saveSessionState(sessionState);
+        stateManager.updateAgentStats('executor', implementResult.success, implCost);
 
         // Step 3: Testing
+        if (useHUD) {
+          hud.step(3, 5, 'Testing with QA Tester');
+          hud.update({
+            mode: 'ralph',
+            currentAgent: 'qa-tester',
+            activeAgents: ['qa-tester'],
+            completedSteps: 2,
+            totalSteps: 5,
+            currentCost: totalCost,
+            elapsedTime: Date.now() - startTime,
+            status: 'running'
+          });
+        }
+        
+        sessionState.tasks[2].status = 'running';
+        sessionState.tasks[2].agentName = 'qa-tester';
+        stateManager.saveSessionState(sessionState);
+        
         logger.info('Step 3/5: Testing...');
         const testResult = await this.qaTester.execute({
           task: 'Write comprehensive tests and verify functionality',
@@ -107,9 +219,37 @@ export class Ralph {
           previousResults: results
         });
         results.push(testResult);
-        totalCost += calculateCost({ ...testResult.usage, model: testResult.model });
+        const testCost = calculateCost({ ...testResult.usage, model: testResult.model });
+        totalCost += testCost;
+        
+        sessionState.tasks[2].status = testResult.success ? 'completed' : 'failed';
+        sessionState.tasks[2].cost = testCost;
+        sessionState.totalCost = totalCost;
+        if (!sessionState.agentsUsed.includes('qa-tester')) {
+          sessionState.agentsUsed.push('qa-tester');
+        }
+        stateManager.saveSessionState(sessionState);
+        stateManager.updateAgentStats('qa-tester', testResult.success, testCost);
 
         // Step 4: Security Review
+        if (useHUD) {
+          hud.step(4, 5, 'Security Review');
+          hud.update({
+            mode: 'ralph',
+            currentAgent: 'security',
+            activeAgents: ['security'],
+            completedSteps: 3,
+            totalSteps: 5,
+            currentCost: totalCost,
+            elapsedTime: Date.now() - startTime,
+            status: 'running'
+          });
+        }
+        
+        sessionState.tasks[3].status = 'running';
+        sessionState.tasks[3].agentName = 'security';
+        stateManager.saveSessionState(sessionState);
+        
         logger.info('Step 4/5: Security Review...');
         const securityResult = await this.security.execute({
           task: 'Perform security review and vulnerability check',
@@ -117,36 +257,130 @@ export class Ralph {
           previousResults: results
         });
         results.push(securityResult);
-        totalCost += calculateCost({ ...securityResult.usage, model: securityResult.model });
+        const secCost = calculateCost({ ...securityResult.usage, model: securityResult.model });
+        totalCost += secCost;
+        
+        sessionState.tasks[3].status = securityResult.success ? 'completed' : 'failed';
+        sessionState.tasks[3].cost = secCost;
+        sessionState.totalCost = totalCost;
+        if (!sessionState.agentsUsed.includes('security')) {
+          sessionState.agentsUsed.push('security');
+        }
+        stateManager.saveSessionState(sessionState);
+        stateManager.updateAgentStats('security', securityResult.success, secCost);
 
         // Step 5: Verification
+        if (useHUD) {
+          hud.step(5, 5, 'Running Verification Checks');
+          hud.update({
+            mode: 'ralph',
+            currentAgent: undefined,
+            activeAgents: [],
+            completedSteps: 4,
+            totalSteps: 5,
+            currentCost: totalCost,
+            elapsedTime: Date.now() - startTime,
+            status: 'running',
+            message: 'Verifying completion...'
+          });
+        }
+        
+        sessionState.tasks[4].status = 'running';
+        stateManager.saveSessionState(sessionState);
+        
         logger.info('Step 5/5: Running verification checks...');
         const checks = await this.runVerificationChecks(results, config);
         verificationChecks.push(...checks);
+        
+        // Display verification results in HUD
+        if (useHUD) {
+          for (const check of checks) {
+            hud.verificationCheck(check.name, check.passed, check.evidence);
+          }
+        }
 
         // Check if all required checks passed
         completed = this.isCompleted(checks, config);
         
+        sessionState.tasks[4].status = completed ? 'completed' : 'failed';
+        stateManager.saveSessionState(sessionState);
+        
         if (!completed) {
           retryCount++;
           logger.warn(`Verification failed. Required checks not passed.`);
+          
+          // Capture wisdom about failure
+          stateManager.captureWisdom({
+            category: 'failure',
+            context: `Ralph mode verification failed on attempt ${retryCount}`,
+            learning: `Verification checks failed: ${checks.filter(c => !c.passed).map(c => c.name).join(', ')}`,
+            tags: ['ralph', 'verification', 'failure'],
+            relatedAgents: sessionState.agentsUsed
+          });
         } else {
           logger.info('✅ All verification checks passed!');
+          
+          // Capture wisdom about success
+          stateManager.captureWisdom({
+            category: 'success',
+            context: `Ralph mode completed successfully${retryCount > 0 ? ` after ${retryCount} retries` : ''}`,
+            learning: `Task completed with all verifications passed. Agents used: ${sessionState.agentsUsed.join(', ')}`,
+            tags: ['ralph', 'verification', 'success'],
+            relatedAgents: sessionState.agentsUsed
+          });
         }
       }
 
       const success = completed && results.every(r => r.success);
+      
+      // Update session state
+      sessionState.status = completed ? 'completed' : 'failed';
+      sessionState.endTime = Date.now();
+      stateManager.saveSessionState(sessionState);
       
       if (!completed) {
         logger.error('❌ Ralph Mode failed to complete after maximum retries');
       } else {
         logger.info('✅ Ralph Mode completed with verification');
       }
+      
+      // Complete HUD
+      if (useHUD) {
+        hud.update({
+          mode: 'ralph',
+          activeAgents: [],
+          completedSteps: 5,
+          totalSteps: 5,
+          currentCost: totalCost,
+          elapsedTime: Date.now() - startTime,
+          status: success ? 'success' : 'error'
+        });
+        hud.complete(success, completed ? 'All verifications passed' : 'Verification failed');
+      }
 
       return this.buildResult(results, verificationChecks, startTime, totalCost, success, completed, retryCount);
 
     } catch (error) {
       logger.error(`Ralph Mode failed: ${error}`);
+      
+      // Update session state
+      sessionState.status = 'failed';
+      sessionState.endTime = Date.now();
+      stateManager.saveSessionState(sessionState);
+      
+      // Capture wisdom about error
+      stateManager.captureWisdom({
+        category: 'failure',
+        context: 'Ralph mode encountered an error',
+        learning: `Error during execution: ${error}`,
+        tags: ['ralph', 'error'],
+        relatedAgents: sessionState.agentsUsed
+      });
+      
+      if (useHUD) {
+        hud.complete(false, `Error: ${error}`);
+      }
+      
       return this.buildResult(results, verificationChecks, startTime, totalCost, false, false, retryCount);
     }
   }
