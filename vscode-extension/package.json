@@ -1,0 +1,203 @@
+{
+  "name": "oh-my-copilot-vscode",
+  "displayName": "Oh My Copilot",
+  "description": "Multi-agent AI orchestration system for VS Code",
+  "version": "0.1.0",
+  "publisher": "odpilot",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "AI",
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "copilot",
+    "ai",
+    "agents",
+    "automation",
+    "multi-agent"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "oh-my-copilot.autopilot",
+        "title": "Oh My Copilot: Run Autopilot",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "oh-my-copilot.chat",
+        "title": "Oh My Copilot: Open Chat",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "oh-my-copilot.ultrawork",
+        "title": "Oh My Copilot: Run Ultrawork (Parallel)",
+        "icon": "$(list-tree)"
+      },
+      {
+        "command": "oh-my-copilot.swarm",
+        "title": "Oh My Copilot: Run Swarm Mode",
+        "icon": "$(organization)"
+      },
+      {
+        "command": "oh-my-copilot.eco",
+        "title": "Oh My Copilot: Run Economy Mode",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "oh-my-copilot.config",
+        "title": "Oh My Copilot: Configure API Keys",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "oh-my-copilot.showCosts",
+        "title": "Oh My Copilot: Show Cost Report",
+        "icon": "$(graph)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "oh-my-copilot",
+          "title": "Oh My Copilot",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "oh-my-copilot": [
+        {
+          "id": "ohMyCopilotSidebar",
+          "name": "Agent Chat",
+          "type": "webview"
+        },
+        {
+          "id": "ohMyCopilotCosts",
+          "name": "Cost Tracking"
+        },
+        {
+          "id": "ohMyCopilotTasks",
+          "name": "Tasks"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Oh My Copilot",
+      "properties": {
+        "ohMyCopilot.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API Key",
+          "order": 1
+        },
+        "ohMyCopilot.anthropicApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API Key",
+          "order": 2
+        },
+        "ohMyCopilot.googleApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Google API Key",
+          "order": 3
+        },
+        "ohMyCopilot.azureApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI API Key",
+          "order": 4
+        },
+        "ohMyCopilot.azureEndpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI Endpoint",
+          "order": 5
+        },
+        "ohMyCopilot.ollamaBaseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama Base URL",
+          "order": 6
+        },
+        "ohMyCopilot.defaultProvider": {
+          "type": "string",
+          "default": "openai",
+          "enum": ["openai", "anthropic", "google", "azure", "ollama", "copilot"],
+          "description": "Default AI Provider",
+          "order": 7
+        },
+        "ohMyCopilot.defaultModel": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "description": "Default Model",
+          "order": 8
+        },
+        "ohMyCopilot.trackCosts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable cost tracking",
+          "order": 9
+        },
+        "ohMyCopilot.logLevel": {
+          "type": "string",
+          "default": "info",
+          "enum": ["debug", "info", "warn", "error"],
+          "description": "Log Level",
+          "order": 10
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "oh-my-copilot.autopilot",
+          "group": "oh-my-copilot@1",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "oh-my-copilot.eco",
+          "group": "oh-my-copilot@2",
+          "when": "editorHasSelection"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "oh-my-copilot.chat",
+          "when": "view == ohMyCopilotSidebar",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^2.22.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "oh-my-copilot": "file:.."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/odpilot/oh-my-copilot.git",
+    "directory": "vscode-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/odpilot/oh-my-copilot/issues"
+  },
+  "homepage": "https://github.com/odpilot/oh-my-copilot#readme",
+  "license": "MIT"
+}
