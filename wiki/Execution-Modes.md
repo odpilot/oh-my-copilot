@@ -166,13 +166,13 @@ omc eco "Fix typos in variable names and comments"
 ### Usage
 
 ```bash
-# Multiple tasks
+# Multiple tasks (use --concurrency for CLI, maxConcurrency in config)
 omc ultrawork "Task 1" "Task 2" "Task 3"
 
 # From file
 omc ultrawork --tasks-file tasks.json
 
-# With concurrency limit
+# With concurrency limit (CLI parameter)
 omc ultrawork --concurrency 5 "Task 1" "Task 2" "Task 3"
 
 # Short alias
@@ -214,17 +214,24 @@ omc ulw "Task 1" "Task 2"
 
 ### Configuration
 
+Configuration file uses `maxConcurrency`, while CLI uses `--concurrency`:
+
 ```json
 {
   "execution": {
     "ultrawork": {
-      "maxConcurrency": 3,
+      "maxConcurrency": 3,  // Used in config file
       "timeout": 300000,
       "stopOnError": false,
       "retryFailedTasks": true
     }
   }
 }
+```
+
+CLI example:
+```bash
+omc ultrawork --concurrency 5 "Task 1" "Task 2"
 ```
 
 ### Examples

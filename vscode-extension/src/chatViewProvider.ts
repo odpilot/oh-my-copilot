@@ -25,10 +25,11 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
     }
 
     private async handleMessage(message: string, webview: vscode.Webview) {
-        // Send acknowledgment
+        // TODO: Full chat integration will be implemented in a future update
+        // For now, provide a helpful placeholder response
         webview.postMessage({ 
             type: 'response', 
-            message: `Received: ${message}. This is a placeholder response. The full chat integration will be implemented in a future update.`
+            message: `📝 Chat integration is coming soon!\n\nFor now, you can use the command palette commands:\n• Oh My Copilot: Run Autopilot\n• Oh My Copilot: Run Economy Mode\n• Oh My Copilot: Run Ultrawork\n• Oh My Copilot: Run Swarm Mode\n\nYour message: "${message}"`
         });
     }
 

@@ -13,9 +13,11 @@ A powerful VS Code extension for the Oh My Copilot multi-agent AI orchestration 
 
 ### 💬 Interactive Chat
 
-- Chat interface in the sidebar
-- Real-time conversations with AI agents
-- Context-aware code assistance
+- Chat interface in the sidebar (🚧 Coming soon)
+- Placeholder UI available for testing
+- Full integration planned for future release
+
+> **Note**: Chat is currently under development. Use command palette commands for full functionality.
 
 ### 💰 Cost Tracking
 
@@ -33,21 +35,36 @@ Easy configuration through VS Code settings:
 
 ## Installation
 
-### From VSIX (Recommended)
+### From VSIX
 
-1. Download the latest `.vsix` file from the releases
-2. Open VS Code
-3. Go to Extensions view (`Ctrl+Shift+X` or `Cmd+Shift+X`)
-4. Click the `...` menu → "Install from VSIX..."
-5. Select the downloaded `.vsix` file
+> **Note**: VSIX package not yet available. Extension is currently in development.
+> To use the extension, build from source (see below).
 
 ### From Source
 
+**Prerequisites:**
+- Node.js >= 18.0.0
+- The main `oh-my-copilot` package must be built in the parent directory
+
+**Steps:**
 ```bash
+# From repository root, build the main package first
+cd /path/to/oh-my-copilot
+npm install
+npm run build
+
+# Then build the extension
 cd vscode-extension
 npm install
 npm run compile
 ```
+
+**Testing locally:**
+1. Open the `vscode-extension` folder in VS Code
+2. Press `F5` to launch Extension Development Host
+3. Test the extension in the new window
+
+> **Packaging Note**: The extension currently uses a local file dependency (`file:..`) for development. Before distribution, this will be updated to reference a published npm package version.
 
 ## Quick Start
 

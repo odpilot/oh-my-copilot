@@ -190,6 +190,7 @@
   "dependencies": {
     "oh-my-copilot": "file:.."
   },
+  "extensionDependencies": [],
   "repository": {
     "type": "git",
     "url": "https://github.com/odpilot/oh-my-copilot.git",
