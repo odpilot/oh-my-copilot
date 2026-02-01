@@ -11,14 +11,24 @@
 ## ✨ Features
 
 ### 🤖 Agent System
-- **8 Specialized Agents**: Architect, Executor, QA Tester, Security Reviewer, Designer, DevOps, Data Analyst, Reviewer
+- **32 Specialized Agents**: Full roster of domain-specific experts organized by complexity tier
+  - **Core Agents**: Architect, Executor, QA Tester, Security, Designer, DevOps, Data Analyst, Reviewer
+  - **Engineering**: Frontend, Backend, Database Expert, API Specialist, Mobile, ML Engineer
+  - **Testing**: Unit Test, Integration Test, Testing Automation specialists
+  - **Infrastructure**: Infrastructure Engineer, CI/CD, Monitoring, Serverless, Caching
+  - **Architecture**: Microservices Architect, UX Designer, Refactoring, Code Reviewer
+  - **Specialized**: GraphQL, WebSocket, Blockchain, Authentication
+  - **Support**: Documentation, Accessibility, Localization, Migration, Performance, Error Handling, Configuration, Git Expert
 - **Custom Agent Creation**: Build your own specialized agents
 - **Context Chaining**: Agents work together seamlessly
-- **Model Flexibility**: Choose different models for each agent
+- **Smart Model Routing**: Automatic model tier selection (LOW/MEDIUM/HIGH)
+- **Automatic Delegation**: Intelligent task routing to specialized agents
 - **MCP Support**: Agents can use Model Context Protocol tools
 
 ### ⚙️ Execution Modes
 - **Autopilot (Pipeline)**: Planning → Implementation → Testing → Security Review
+- **Ultrapilot**: Advanced orchestration with skill composition and smart routing
+- **Ralph**: Guarantee completion with verification and evidence-based checks
 - **Ultrawork**: Parallel task execution for maximum speed
 - **Swarm**: Dynamic task claiming from SQLite pool with autonomous agents
 - **Ecomode**: Cost-optimized execution with efficient models
@@ -42,6 +52,9 @@
 - **Performance Metrics**: Monitor agent performance and success rates
 - **Web Dashboard**: Beautiful UI for real-time monitoring
 - **CLI Reports**: Detailed reports in the terminal
+- **HUD Statusline**: Real-time progress display during execution ✨ NEW!
+- **State Management**: Session history and wisdom capture ✨ NEW!
+- **Agent Statistics**: Success rate and cost tracking per agent ✨ NEW!
 
 ### 🛠️ Developer Tools
 - **Interactive CLI**: Rich command-line interface with multiple modes
@@ -50,6 +63,11 @@
 - **SQLite Task Pool**: Atomic task management with state persistence
 - **Keyword Detection**: Automatic mode detection from natural language
 - **Template System**: Execute common workflows with pre-built templates
+- **State Management**: View session history, wisdom, and agent stats ✨ NEW!
+  - `omc state sessions` - View recent sessions
+  - `omc state wisdom` - View captured learnings
+  - `omc state stats` - View agent statistics
+  - `omc state clean` - Clean old session data
 
 ---
 
@@ -185,7 +203,62 @@ omc autopilot "Build a user authentication system"
 omc ap "Build a REST API" --skip-security
 ```
 
-### 2. Ultrawork Mode
+### 2. Ultrapilot Mode
+
+Advanced orchestration with skill composition and intelligent agent routing.
+
+**Features**:
+- Skill composition (execution + enhancement + guarantee layers)
+- Smart model routing based on task complexity (LOW/MEDIUM/HIGH tiers)
+- Automatic delegation to specialized agents
+- Parallel execution support
+
+```typescript
+const result = await omc.ultrapilotMode(
+  'Build a scalable microservices API',
+  { framework: 'Express' },
+  {
+    skills: ['default', 'ultrawork', 'git-master'],
+    smartRouting: true,
+    autoDelegate: true,
+    parallelExecution: true
+  }
+);
+```
+
+**CLI**:
+```bash
+omc ultrapilot "Build a microservices API" --smart-routing --auto-delegate
+```
+
+### 3. Ralph Mode
+
+Guarantee completion mode with verification and evidence-based checks.
+
+**Features**:
+- Automatic retry on verification failure
+- Evidence-based completion checks (BUILD, TEST, LINT, FUNCTIONALITY, SECURITY)
+- Strict mode for comprehensive verification
+- Guaranteed task completion
+
+```typescript
+const result = await omc.ralphMode(
+  'Implement user authentication with tests',
+  { framework: 'Express' },
+  {
+    maxRetries: 3,
+    requiredChecks: ['BUILD', 'TEST', 'FUNCTIONALITY'],
+    strictMode: true
+  }
+);
+```
+
+**CLI**:
+```bash
+omc ralph "Build feature" --strict --max-retries 3
+```
+
+### 4. Ultrawork Mode
 
 Execute multiple independent tasks in parallel for maximum speed.
 
@@ -255,15 +328,63 @@ omc eco "Simple task to implement"
 
 ## 🤖 Agents
 
-### Built-in Agents
+### Built-in Agents (32 Total)
 
-| Agent | Model | Role | Responsibilities |
-|-------|-------|------|------------------|
-| **Architect** | GPT-4o | Planning | System design, architecture, task breakdown |
-| **Executor** | GPT-4o-mini | Implementation | Code writing, file operations, edge cases |
-| **QA Tester** | GPT-4o-mini | Testing | Test writing, validation, coverage |
-| **Security** | GPT-4o | Security | Vulnerability detection, security review |
-| **Designer** | GPT-4o | UI/UX | Interface design, accessibility |
+Oh My Copilot provides 32 specialized agents organized by domain and complexity tier:
+
+#### Core Agents
+| Agent | Model | Tier | Role |
+|-------|-------|------|------|
+| **Architect** | GPT-4o | HIGH | System design, architecture, task breakdown |
+| **Executor** | GPT-4o-mini | MEDIUM | Code implementation, file operations |
+| **QA Tester** | GPT-4o-mini | MEDIUM | Test writing, validation, coverage |
+| **Security** | GPT-4o | HIGH | Vulnerability detection, security review |
+| **Designer** | GPT-4o | HIGH | UI/UX design, interface design |
+| **DevOps** | GPT-4o-mini | MEDIUM | Deployment, infrastructure operations |
+| **Data Analyst** | GPT-4o | MEDIUM | Data analysis and insights |
+| **Reviewer** | GPT-4o | MEDIUM | Code review and quality checks |
+
+#### Engineering Specialists
+- **Frontend Engineer** (HIGH): React, Vue, Angular, modern UI development
+- **Backend Engineer** (HIGH): APIs, server-side logic, microservices
+- **Database Expert** (HIGH): Schema design, query optimization, migrations
+- **API Specialist** (MEDIUM): REST/GraphQL API design and documentation
+- **Mobile Developer** (HIGH): iOS, Android, React Native development
+- **ML Engineer** (HIGH): Machine learning models and AI integration
+
+#### Testing Specialists
+- **Unit Test Specialist** (MEDIUM): Comprehensive unit testing
+- **Integration Test Specialist** (MEDIUM): E2E and integration testing
+- **Testing Automation Specialist** (MEDIUM): Test automation frameworks
+
+#### Infrastructure & DevOps
+- **Infrastructure Engineer** (HIGH): Cloud infrastructure, IaC (Terraform, AWS)
+- **CI/CD Specialist** (MEDIUM): Pipeline automation, deployment
+- **Monitoring Specialist** (MEDIUM): Logging, metrics, observability
+- **Serverless Specialist** (MEDIUM): Lambda, serverless architectures
+- **Caching Specialist** (MEDIUM): Redis, Memcached, CDN strategies
+
+#### Architecture & Design
+- **Microservices Architect** (HIGH): Distributed systems, service mesh
+- **UX Designer** (HIGH): User experience, accessibility, responsive design
+- **Refactoring Specialist** (HIGH): Code quality, design patterns
+- **Code Reviewer** (HIGH): Thorough code review, best practices
+
+#### Specialized Domains
+- **GraphQL Specialist** (MEDIUM): GraphQL schema and resolver design
+- **WebSocket Specialist** (MEDIUM): Real-time communication
+- **Blockchain Developer** (HIGH): Smart contracts, Web3, DApps
+- **Authentication Specialist** (HIGH): OAuth, JWT, SSO, MFA
+
+#### Support & Quality
+- **Documentation Specialist** (MEDIUM): API docs, README, technical writing
+- **Accessibility Specialist** (MEDIUM): WCAG compliance, inclusive design
+- **Localization Expert** (MEDIUM): i18n, multi-language support
+- **Migration Specialist** (HIGH): Framework upgrades, code migrations
+- **Performance Optimizer** (HIGH): Performance tuning, bottleneck analysis
+- **Error Handling Specialist** (MEDIUM): Robust error handling, resilience
+- **Configuration Specialist** (MEDIUM): Environment config, feature flags
+- **Git Expert** (MEDIUM): Git workflows, branching strategies
 
 ### Custom Agents
 
@@ -291,23 +412,30 @@ const result = await dbAgent.execute({
 
 ---
 
-## 🔍 Keyword Detection
+## 🔍 Keyword Detection & Magic Words
 
-Oh My Copilot automatically detects execution mode from natural language:
+Oh My Copilot automatically detects execution mode from natural language using "magic words":
 
 | Keywords | Mode | Description |
 |----------|------|-------------|
+| `ralph`, `guarantee`, `verify` | Ralph | Guarantee completion with verification |
+| `ultrapilot`, `smart routing`, `auto delegate` | Ultrapilot | Advanced orchestration |
 | `autopilot`, `build me` | Autopilot | Full automated pipeline |
-| `ultrawork`, `ulw` | Ultrawork | Parallel task execution |
+| `ultrawork`, `ulw`, `parallel` | Ultrawork | Parallel task execution |
 | `swarm` | Swarm | Distributed task claiming |
 | `eco`, `budget` | Ecomode | Cost-optimized execution |
 
 ```typescript
-// These all trigger autopilot mode:
+// These all trigger their respective modes:
 omc.run('autopilot: create an API')
 omc.run('build me a REST service')
 
-// These trigger economy mode:
+omc.run('ultrapilot: build a microservices API with smart routing')
+omc.run('auto delegate this complex task')
+
+omc.run('ralph: implement authentication with full verification')
+omc.run('guarantee this feature is complete')
+
 omc.run('eco: simple implementation')
 omc.run('budget mode: add logging')
 ```

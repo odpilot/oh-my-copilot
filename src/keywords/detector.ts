@@ -5,7 +5,7 @@
 
 import { PATTERNS, type KeywordPattern } from './patterns.js';
 
-export type ExecutionMode = 'autopilot' | 'ultrawork' | 'swarm' | 'ecomode' | 'default';
+export type ExecutionMode = 'autopilot' | 'ultrawork' | 'swarm' | 'ecomode' | 'ralph' | 'ultrapilot' | 'default';
 
 export interface DetectionResult {
   mode: ExecutionMode;
