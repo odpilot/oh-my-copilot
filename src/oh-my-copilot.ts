@@ -7,6 +7,8 @@ import { Pipeline } from './orchestrator/pipeline.js';
 import { Swarm } from './orchestrator/swarm.js';
 import { Ultrawork } from './orchestrator/ultrawork.js';
 import { Ecomode } from './orchestrator/ecomode.js';
+import { Ralph } from './orchestrator/ralph.js';
+import { Ultrapilot } from './orchestrator/ultrapilot.js';
 import { TaskPool } from './tasks/task-pool.js';
 import { keywordDetector, type ExecutionMode } from './keywords/detector.js';
 import { CostTracker } from './analytics/cost-tracker.js';
@@ -18,6 +20,8 @@ import type { OhMyCopilotConfig } from './config/types.js';
 import type { PipelineResult } from './orchestrator/pipeline.js';
 import type { UltraworkResult, UltraworkTask } from './orchestrator/ultrawork.js';
 import type { EcomodeResult } from './orchestrator/ecomode.js';
+import type { RalphResult } from './orchestrator/ralph.js';
+import type { UltrapilotResult } from './orchestrator/ultrapilot.js';
 
 export class OhMyCopilot {
   private config: OhMyCopilotConfig;
@@ -25,6 +29,8 @@ export class OhMyCopilot {
   private swarm: Swarm;
   private ultrawork: Ultrawork;
   private ecomode: Ecomode;
+  private ralph: Ralph;
+  private ultrapilot: Ultrapilot;
   private taskPool: TaskPool;
   private costTracker: CostTracker;
   private metrics: Metrics;
@@ -57,6 +63,8 @@ export class OhMyCopilot {
     this.swarm = new Swarm(this.taskPool);
     this.ultrawork = new Ultrawork();
     this.ecomode = new Ecomode();
+    this.ralph = new Ralph();
+    this.ultrapilot = new Ultrapilot();
 
     logger.info('OhMyCopilot initialized');
   }
@@ -168,6 +176,67 @@ export class OhMyCopilot {
     this.metrics.record('ecomode.execution_time', result.totalTime);
     this.metrics.record('ecomode.total_cost', result.totalCost);
     this.metrics.record('ecomode.cost_savings', result.costSavings);
+    
+    return result;
+  }
+
+  /**
+   * Execute in Ralph mode (guarantee completion)
+   */
+  async ralphMode(
+    task: string,
+    context?: Record<string, any>,
+    config?: { maxRetries?: number; requiredChecks?: string[]; strictMode?: boolean }
+  ): Promise<RalphResult> {
+    logger.info('Executing in Ralph mode (Guarantee Completion)');
+    const result = await this.ralph.execute(task, context, config);
+    
+    // Track costs
+    for (const agentResult of result.results) {
+      this.costTracker.track(
+        { ...agentResult.usage, model: agentResult.model },
+        agentResult.agentName
+      );
+    }
+    
+    // Track metrics
+    this.metrics.record('ralph.execution_time', result.totalTime);
+    this.metrics.record('ralph.total_cost', result.totalCost);
+    this.metrics.record('ralph.retry_count', result.retryCount);
+    this.metrics.record('ralph.verification_passed', result.completed ? 1 : 0);
+    
+    return result;
+  }
+
+  /**
+   * Execute in Ultrapilot mode (advanced orchestration)
+   */
+  async ultrapilotMode(
+    task: string,
+    context?: Record<string, any>,
+    config?: {
+      skills?: string[];
+      parallelExecution?: boolean;
+      smartRouting?: boolean;
+      autoDelegate?: boolean;
+    }
+  ): Promise<UltrapilotResult> {
+    logger.info('Executing in Ultrapilot mode (Advanced Orchestration)');
+    const result = await this.ultrapilot.execute(task, context, config);
+    
+    // Track costs
+    for (const agentResult of result.results) {
+      this.costTracker.track(
+        { ...agentResult.usage, model: agentResult.model },
+        agentResult.agentName
+      );
+    }
+    
+    // Track metrics
+    this.metrics.record('ultrapilot.execution_time', result.totalTime);
+    this.metrics.record('ultrapilot.total_cost', result.totalCost);
+    this.metrics.record('ultrapilot.skills_used', result.skillsUsed.length);
+    this.metrics.record('ultrapilot.delegations', result.delegations);
     
     return result;
   }
