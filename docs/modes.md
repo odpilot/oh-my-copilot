@@ -1,15 +1,17 @@
 # Execution Modes
 
-Oh My Copilot supports multiple execution modes, each optimized for different use cases.
+Oh My Copilot supports six execution modes, each optimized for different use cases.
 
 ## Mode Comparison
 
-| Mode | Use Case | Agents | Parallelism | Cost |
-|------|----------|--------|-------------|------|
-| **Autopilot** | Complete features | Multiple | Sequential | High |
-| **Ultrawork** | Many small tasks | Custom | Full | Medium |
-| **Swarm** | Dynamic workload | Pool | Concurrent | Variable |
-| **Ecomode** | Cost-sensitive | Minimal | Sequential | Low |
+| Mode | Use Case | Agents | Parallelism | Cost | Guarantee |
+|------|----------|--------|-------------|------|-----------|
+| **Autopilot** | Complete features | Multiple | Sequential | High | No |
+| **Ultrapilot** | Complex orchestration | Dynamic | Optional | Medium-High | Optional |
+| **Ralph** | Guaranteed completion | Multiple + Retries | Sequential | High | Yes |
+| **Ultrawork** | Many small tasks | Custom | Full | Medium | No |
+| **Swarm** | Dynamic workload | Pool | Concurrent | Variable | No |
+| **Ecomode** | Cost-sensitive | Minimal | Sequential | Low | No |
 
 ---
 
@@ -82,7 +84,173 @@ interface PipelineResult {
 
 ---
 
-## 2. Ultrawork Mode
+## 2. Ultrapilot Mode
+
+**Best for**: Complex tasks requiring intelligent orchestration, smart routing, and auto-delegation
+
+### Features
+
+- **Skill Composition**: Combine execution, enhancement, and guarantee skills
+- **Smart Model Routing**: Automatic tier selection (HIGH/MEDIUM/LOW) based on complexity
+- **Auto-Delegation**: Intelligent routing to specialized agents
+- **Parallel Execution**: Optional concurrent task processing
+- **Flexible Configuration**: Enable/disable features as needed
+
+### Skill Layers
+
+```
+┌─────────────────────────────────────┐
+│  GUARANTEE (optional)               │
+│  ralph: Verification enforcement    │
+└─────────────────────────────────────┘
+                ↓
+┌─────────────────────────────────────┐
+│  ENHANCEMENT (0-N)                  │
+│  ultrawork, git-master, etc.        │
+└─────────────────────────────────────┘
+                ↓
+┌─────────────────────────────────────┐
+│  EXECUTION (primary)                │
+│  default, planner, orchestrate      │
+└─────────────────────────────────────┘
+```
+
+### Usage
+
+```typescript
+const result = await omc.ultrapilotMode(
+  'Build a scalable microservices API',
+  { framework: 'Express' },
+  {
+    skills: ['default', 'ultrawork', 'git-master'], // Skill composition
+    smartRouting: true,      // Enable intelligent model routing
+    autoDelegate: true,      // Auto-delegate to specialists
+    parallelExecution: true  // Enable parallel processing
+  }
+);
+
+console.log(result.summary);
+console.log(`Skills used: ${result.skillsUsed.map(s => s.name).join(', ')}`);
+console.log(`Delegations: ${result.delegations}`);
+```
+
+### CLI
+
+```bash
+# Full features
+omc ultrapilot "Build microservices API" --smart-routing --auto-delegate --parallel
+
+# With specific skills
+omc up "Complex task" --skills "default,ultrawork,ralph"
+
+# Disable features
+omc up "Task" --no-smart-routing --no-auto-delegate
+```
+
+### Smart Routing
+
+Automatically selects model tier based on task complexity:
+
+- **HIGH Tier** (GPT-4o): Complex reasoning, architecture, distributed systems
+- **MEDIUM Tier** (GPT-4o-mini): Standard implementation, APIs, testing
+- **LOW Tier** (Efficient): Simple tasks, documentation, basic fixes
+
+### Auto-Delegation
+
+Detects keywords and routes to specialists:
+
+| Keywords | Delegated Agent |
+|----------|----------------|
+| database, sql, query | Database Expert |
+| frontend, react, ui | Frontend Engineer |
+| api, endpoint, rest | API Specialist |
+| test, unit test | Unit Test Specialist |
+| security, auth | Authentication Specialist |
+
+---
+
+## 3. Ralph Mode
+
+**Best for**: Critical tasks requiring guaranteed completion with verification
+
+### Features
+
+- **Verification Protocol**: BUILD, TEST, LINT, FUNCTIONALITY, SECURITY, ERROR_FREE
+- **Evidence-Based**: Requires proof of completion
+- **Automatic Retry**: Retry on verification failure (up to maxRetries)
+- **Strict Mode**: All checks must pass (not just required ones)
+- **Completion Guarantee**: Ensures task is done with evidence
+
+### Verification Flow
+
+```
+1. Execute task
+   ↓
+2. Run verification checks
+   ↓
+3. All required checks pass? → COMPLETE ✓
+   ↓
+4. Some checks fail? → Retry with feedback
+   ↓
+5. Repeat until complete or max retries
+```
+
+### Verification Checks
+
+| Check | Required | Purpose |
+|-------|----------|---------|
+| **BUILD** | Yes | Code compiles/builds successfully |
+| **TEST** | Yes | All tests pass |
+| **LINT** | No | No linting errors |
+| **FUNCTIONALITY** | Yes | Feature works as expected |
+| **SECURITY** | Strict mode | No vulnerabilities detected |
+| **ERROR_FREE** | Yes | No unresolved errors |
+
+### Usage
+
+```typescript
+const result = await omc.ralphMode(
+  'Implement user authentication with full test coverage',
+  { framework: 'Express' },
+  {
+    maxRetries: 3,
+    requiredChecks: ['BUILD', 'TEST', 'FUNCTIONALITY', 'SECURITY'],
+    strictMode: true,
+    evidenceRequired: true
+  }
+);
+
+console.log(result.summary);
+console.log(`Completed: ${result.completed}`);
+console.log(`Retries: ${result.retryCount}`);
+
+// Check verification results
+result.verificationChecks.forEach(check => {
+  console.log(`${check.passed ? '✓' : '✗'} ${check.name}`);
+});
+```
+
+### CLI
+
+```bash
+# Standard verification
+omc ralph "Implement feature" --max-retries 3
+
+# Strict mode (all checks must pass)
+omc ralph "Critical feature" --strict --max-retries 5
+
+# Custom verification checks
+omc ralph "Task" --checks "BUILD,TEST,SECURITY"
+```
+
+### Exit Codes
+
+- `0`: Task completed successfully with all verifications passed
+- `1`: Task failed verification after maximum retries
+
+---
+
+## 4. Ultrawork Mode
 
 **Best for**: Executing multiple independent tasks simultaneously
 
@@ -306,23 +474,41 @@ omc eco "Task" --output result.json
 - Quality is critical
 - Security review needed
 - Budget is not primary concern
+- Standard pipeline workflow is sufficient
+
+### Use Ultrapilot when:
+- Complex tasks requiring intelligent orchestration
+- Need smart model routing for cost optimization
+- Want automatic delegation to specialists
+- Task may benefit from skill composition
+- Need flexible execution strategies
+
+### Use Ralph when:
+- Task absolutely must be completed correctly
+- Need verification with evidence
+- Critical production code
+- Compliance or audit requirements
+- Willing to retry for guaranteed completion
 
 ### Use Ultrawork when:
 - Multiple independent tasks
 - Speed is priority
 - Tasks can run in parallel
+- No interdependencies between tasks
 
 ### Use Swarm when:
 - Dynamic task generation
 - Variable task complexity
 - Need task persistence
 - Distributed workload
+- Long-running task pool
 
 ### Use Ecomode when:
 - Simple implementations
 - Budget constraints
 - Prototyping
 - Non-critical features
+- Cost is the primary concern
 
 ---
 
@@ -334,6 +520,14 @@ Oh My Copilot automatically detects mode from input:
 // Autopilot
 omc.run('autopilot: build me a REST API');
 omc.run('build me a complete authentication system');
+
+// Ultrapilot
+omc.run('ultrapilot: build microservices with smart routing');
+omc.run('auto delegate this complex task');
+
+// Ralph
+omc.run('ralph: implement authentication with verification');
+omc.run('guarantee this feature is complete');
 
 // Ultrawork
 omc.run('ultrawork: process these tasks in parallel');
@@ -353,11 +547,22 @@ omc.run('budget mode: add basic logging');
 
 Based on implementing a typical REST API:
 
-| Mode | Time | Cost | Quality | Use Case |
-|------|------|------|---------|----------|
-| Autopilot | ~3-5 min | $0.05-0.15 | ★★★★★ | Production |
-| Ultrawork | ~1-2 min | $0.03-0.10 | ★★★★☆ | Speed priority |
-| Swarm | ~2-4 min | $0.04-0.12 | ★★★★☆ | Dynamic tasks |
-| Ecomode | ~2-3 min | $0.01-0.05 | ★★★☆☆ | Budget priority |
+| Mode | Time | Cost | Quality | Guarantee | Use Case |
+|------|------|------|---------|-----------|----------|
+| Autopilot | ~3-5 min | $0.05-0.15 | ★★★★★ | No | Production |
+| Ultrapilot | ~2-4 min | $0.04-0.12 | ★★★★★ | Optional | Complex tasks |
+| Ralph | ~4-7 min | $0.06-0.18 | ★★★★★ | Yes | Critical features |
+| Ultrawork | ~1-2 min | $0.03-0.10 | ★★★★☆ | No | Speed priority |
+| Swarm | ~2-4 min | $0.04-0.12 | ★★★★☆ | No | Dynamic tasks |
+| Ecomode | ~2-3 min | $0.01-0.05 | ★★★☆☆ | No | Budget priority |
 
 *Times and costs are approximate and depend on task complexity.*
+
+### Cost Optimization Tips
+
+1. **Use Ecomode** for simple, non-critical tasks
+2. **Use Ultrapilot with smart routing** to automatically select appropriate model tiers
+3. **Use Autopilot** for balanced cost/quality
+4. **Use Ralph** only when completion guarantee is essential
+5. Set cost thresholds to prevent overspending
+6. Use concise, specific prompts to reduce token usage
