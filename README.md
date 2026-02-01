@@ -2,6 +2,12 @@
 
 🚀 A powerful multi-agent orchestration system with BYOK support.
 
+[![npm version](https://img.shields.io/npm/v/oh-my-copilot.svg)](https://www.npmjs.com/package/oh-my-copilot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+
+📚 **[Documentation Wiki](https://github.com/odpilot/oh-my-copilot/wiki)** | 🔌 **[VS Code Extension](vscode-extension/)** | 💬 **[Discussions](https://github.com/odpilot/oh-my-copilot/discussions)**
+
 ## ✨ Features
 
 ### 🤖 Agent System
@@ -40,9 +46,38 @@
 ### 🛠️ Developer Tools
 - **Interactive CLI**: Rich command-line interface with multiple modes
 - **Web UI Dashboard**: Modern web interface for monitoring and management
+- **VS Code Extension**: Full IDE integration with commands, chat, and monitoring
 - **SQLite Task Pool**: Atomic task management with state persistence
 - **Keyword Detection**: Automatic mode detection from natural language
 - **Template System**: Execute common workflows with pre-built templates
+
+---
+
+## 💻 VS Code Extension
+
+Install the Oh My Copilot extension for seamless IDE integration:
+
+### Features
+- 🚀 **Command Palette Integration** - Run autopilot, eco, ultrawork, and swarm from VS Code
+- 💬 **Chat Sidebar** - Interactive agent chat directly in your editor
+- 💰 **Cost Tracking** - Real-time cost monitoring in the sidebar
+- ⚙️ **Configuration UI** - Easy API key and model setup through VS Code settings
+- 📤 **Output Panel** - View results and logs without leaving the editor
+
+### Installation
+
+1. Download the `.vsix` file from the [vscode-extension](vscode-extension/) directory
+2. Install in VS Code: Extensions → `...` → "Install from VSIX..."
+3. Configure API keys in VS Code settings
+
+Or build from source:
+```bash
+cd vscode-extension
+npm install
+npm run compile
+```
+
+See the [VS Code Extension README](vscode-extension/README.md) for detailed documentation.
 
 ---
 
@@ -399,7 +434,20 @@ Features:
 
 ## 📖 Documentation
 
-Detailed documentation is available in the `docs/` directory:
+### 📚 Wiki (Recommended)
+
+Visit our comprehensive [**GitHub Wiki**](https://github.com/odpilot/oh-my-copilot/wiki) for:
+
+- 🚀 [Quick Start Guide](https://github.com/odpilot/oh-my-copilot/wiki/Quick-Start) - Get started in 5 minutes
+- 📦 [Installation](https://github.com/odpilot/oh-my-copilot/wiki/Installation) - Setup guide for all platforms
+- ⚙️ [Configuration](https://github.com/odpilot/oh-my-copilot/wiki/Configuration) - API keys and settings
+- 🎯 [Execution Modes](https://github.com/odpilot/oh-my-copilot/wiki/Execution-Modes) - Autopilot, Ultrawork, Swarm, Economy
+- 🛠️ [Troubleshooting](https://github.com/odpilot/oh-my-copilot/wiki/Troubleshooting) - Common issues and solutions
+- ❓ [FAQ](https://github.com/odpilot/oh-my-copilot/wiki/FAQ) - Frequently asked questions
+
+### 📁 API Documentation
+
+Detailed API and technical documentation is available in the `docs/` directory:
 
 | Document | Description |
 |----------|-------------|
@@ -412,9 +460,9 @@ Detailed documentation is available in the `docs/` directory:
 | [Cost Tracking](./docs/cost-tracking.md) | Cost analysis and optimization |
 | [Custom Agents](./docs/custom-agents.md) | Building custom specialized agents |
 | [Task Management](./docs/task-management.md) | SQLite task pool and state management |
-| [MCP Integration](./docs/mcp.md) | **NEW:** Model Context Protocol integration |
-| [Task Templates](./docs/templates.md) | **NEW:** Task template system (8 templates) |
-| [Plugin System](./docs/plugins.md) | **NEW:** Plugin development and usage |
+| [MCP Integration](./docs/mcp.md) | Model Context Protocol integration |
+| [Task Templates](./docs/templates.md) | Task template system (8 templates) |
+| [Plugin System](./docs/plugins.md) | Plugin development and usage |
 | [API Reference](./docs/api.md) | Programmatic API documentation |
 
 ---
@@ -505,6 +553,22 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+See our [Wiki Contributing Guide](https://github.com/odpilot/oh-my-copilot/wiki/Contributing) for more details.
+
+---
+
+## 🔗 Resources
+
+### Documentation
+- 📚 [Wiki](https://github.com/odpilot/oh-my-copilot/wiki) - Comprehensive user guide
+- 📁 [API Docs](./docs/) - Technical documentation
+- 🔌 [VS Code Extension](./vscode-extension/) - IDE integration
+
+### Community
+- 💬 [GitHub Discussions](https://github.com/odpilot/oh-my-copilot/discussions) - Ask questions and share ideas
+- 🐛 [Issue Tracker](https://github.com/odpilot/oh-my-copilot/issues) - Report bugs or request features
+- 📖 [Examples](./examples/) - Code examples and use cases
 
 ---
 
